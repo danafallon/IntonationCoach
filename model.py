@@ -4,12 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+#######################################################################################
 # Model definitions
 
 
 
 
 
+#######################################################################################
 # Helper functions
 
 def connect_to_db(app):

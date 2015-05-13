@@ -1,2 +1,6 @@
 env
 *.pyc
+Praat.app
+*.wav
+t*.txt
+p*.txt
