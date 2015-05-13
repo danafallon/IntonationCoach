@@ -5,6 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 
 import model
+import pitchgraph
 
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ def about():
 
 
 @app.route('/french')
-def show_content():
+def french_content():
 	"""Display explanation text and sample sentences, with play buttons for sample recordings."""
 
 	return render_template("french.html")

@@ -1,56 +1,39 @@
-## first attempt: using SoundAnalyse ##
+from praatinterface import PraatLoader
+from os import path
 
-import numpy
-import wave
-import analyse
-import struct
+def praat_analyze_pitch(audio_file):
+	"""Given a wav file, use Praat to return a dictionary containing pitch (in Hz)
+	at each millisecond."""
 
-sound_file = wave.open('supermarche_mono.wav', 'r')		# open sound file
-
-frames = sound_file.getnframes()
-# print frames
-
-for i in range(0, frames, 1024):
-	# print "i = ", i
-	# sound_file.setpos(i)
-	raw_samp = sound_file.readframes(1024)		# read frames as string of bytes
-
-	# print "position: ", sound_file.tell()
-	# print "raw_samp = ", str(raw_samp)
+	praatpath = path.abspath('Praat.app/Contents/MacOS/Praat')	# locate Praat executable
+	pl = PraatLoader(praatpath=praatpath)	# create instance of PraatLoader object
 	
-	# chunk = struct.unpack(<)
+	praat_output = pl.run_script('pitch.praat', audio_file)	# run pitch script in Praat
+	pitch_data = pl.read_praat_out(praat_output) # turn Praat's output into Python dict
 
-	# Convert to NumPy array
-	chunk = numpy.fromstring(raw_samp, dtype=numpy.int16)
-
-	# print "chunk = ", chunk
-
-	# Show pitch
-	print analyse.detect_pitch(chunk, min_frequency=75, max_frequency=500,
-		ratio=3.0, sens=0.0)
+	return pitch_data
 
 
+def format_pitch_data(pd):
+	"""Clean up the dictionary returned by praatinterface."""
 
-## second attempt: using praatinterface ##
+	for t in pd.keys():
+		pd[t] = pd[t]['Pitch'] 	  # make each value just the pitch, instead of a sub-dict
+		if pd[t] == 0:
+			pd[t] = None		  # if pitch is 0, replace with None
 
-# from praatinterface import PraatLoader
-# from os import path
+	return pd
 
-# praatpath = path.abspath('Praat.app')
 
-# pl = PraatLoader(praatpath=praatpath)
-
-# audio_file = 'test.wav'
-
-# text = pl.run_script('pitch.praat', audio_file, 5, 5500)
-
-# pitch = pl.read_praat_out(text)
+if __name__ == "__main__":
+	audio_file = path.abspath('supermarche2.wav')
+	pitch_data = praat_analyze_pitch(audio_file)
+	formatted_data = format_pitch_data(pitch_data)
+	for key in sorted(formatted_data):		
+		print key, ": ", formatted_data[key]		# display keys and values in order (for me)
 
 
 
-## third attempt: using intonation lib ##
-
-# import intonation
 
 
 
