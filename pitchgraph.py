@@ -1,5 +1,6 @@
 from praatinterface import PraatLoader
 from os import path
+import json
 
 def praat_analyze_pitch(audio_file):
 	"""Given a wav file, use Praat to return a dictionary containing pitch (in Hz)
@@ -15,22 +16,32 @@ def praat_analyze_pitch(audio_file):
 
 
 def format_pitch_data(pd):
-	"""Clean up the dictionary returned by praatinterface."""
+	"""Clean up the dictionary returned by praatinterface, put it in the format
+	needed for graphing, and return it as JSON."""
 
 	for t in pd.keys():
 		pd[t] = pd[t]['Pitch'] 	  # make each value just the pitch, instead of a sub-dict
 		if pd[t] == 0:
-			pd[t] = None		  # if pitch is 0, replace with None
+			del pd[t]		  # if pitch is 0, remove from dictionary
 
-	return pd
+	# to format for graph input, make list of dicts containing x-y pairs
+	datapoints_list = []
+	for t in pd.keys():
+		datapoint = {}
+		datapoint["x"] = t
+		datapoint["y"] = pd[t]
+		datapoints_list.append(datapoint)
+
+	return json.dumps(datapoints_list, sort_keys=True)
 
 
 if __name__ == "__main__":
 	audio_file = path.abspath('supermarche2.wav')
 	pitch_data = praat_analyze_pitch(audio_file)
-	formatted_data = format_pitch_data(pitch_data)
-	for key in sorted(formatted_data):		
-		print key, ": ", formatted_data[key]		# display keys and values in order (for me)
+	json_pd = format_pitch_data(pitch_data)
+	print json_pd
+
+	
 
 
 

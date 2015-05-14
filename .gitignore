@@ -4,3 +4,4 @@ Praat.app
 *.wav
 t*.txt
 p*.txt
+.DS_Store
