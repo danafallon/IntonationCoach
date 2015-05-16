@@ -1,11 +1,11 @@
-"""Intonation Coach"""
+"""Server for Intonation Coach."""
 
 from flask import Flask, render_template, session
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 
 import model
-import pitchgraph
+from pitchgraph import praat_analyze_pitch, format_pitch_data
 
 
 app = Flask(__name__)
@@ -37,9 +37,13 @@ def french_content():
 	return render_template("french.html")
 
 
+@app.route('/analyze')
+def analyze_user_rec():
+	"""Analyze the user's recording and send pitch data back to page."""
 
-
-
+	user_audio = request.form.get("user_file")
+	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_audio))
+	return user_pitch_data
 
 
 
