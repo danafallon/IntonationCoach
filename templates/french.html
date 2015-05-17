@@ -24,16 +24,50 @@
 
 <script>
 
+///// Audio player ////
+
+var buf = null;
+
+//create AudioContext
+var context = new AudioContext();
+
+//load and decode wav file 
+function loadFile(url) { 
+    var request = new XMLHttpRequest(); 
+    request.open("GET", url, true); 
+    request.responseType = "arraybuffer"; 
+    request.onload = function() { 
+        //decode the loaded data 
+        context.decodeAudioData(request.response, function(buffer) { 
+            buf = buffer;
+            playSound();
+        }); 
+    }; 
+    request.send(); 
+} 
+
+//play the loaded file 
+function playSound() { 
+    //create a source node from the buffer 
+    var src = context.createBufferSource();  
+    src.buffer = buf; 
+    //connect to the final output node (the speakers) 
+    src.connect(context.destination); 
+    //play immediately 
+    src.start(0); 
+} 
+
+
+// TODO: implement Recorder.js
 // var rec = new Recorder(source [, config])
 
+
 function showAnalysis(recording) {
-  // send user's recording to server & assign response to variable
-  $.post('/analyze', { user_file: recording }, function(response) {
-      var userPitchData = response;
+  // send user's recording & sentence name to server & assign pitch data from response to variables
+  $.post('/analyze', { user_file: recording, sentence: 'supermarche' }, function(response) {
+      var targetPitchData = response[0];
+      var userPitchData = response[1];
   });
-
-  // fetch pitch analysis of target recording (TODO)
-
 
   // build graph
   var data = {
@@ -80,6 +114,11 @@ function handleRecord() {
     $('#analyze').removeAttr('disabled');
   }
 };
+
+// play sample sentence when play button is pressed
+$('#play-sample1').on('click', function(evt) {
+  loadFile("/sounds/supermarche2.wav");
+});
 
 // hide graph until user has submitted recording
 $('#pitch-contour').hide();

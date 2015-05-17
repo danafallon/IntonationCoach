@@ -1,8 +1,9 @@
 """Server for Intonation Coach."""
 
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, send_from_directory
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
+import json
 
 import model
 from pitchgraph import praat_analyze_pitch, format_pitch_data
@@ -37,13 +38,23 @@ def french_content():
 	return render_template("french.html")
 
 
+@app.route('/sounds/<path:filename>')
+def send_audio_file(filename):
+    return send_from_directory('static/sounds', filename)
+
 @app.route('/analyze')
 def analyze_user_rec():
-	"""Analyze the user's recording and send pitch data back to page."""
+	"""Analyze the user's recording and send pitch data for both recordings back to page."""
 
+	# fetch target recording's pitch data:
+	target_filepath = request.form.get("sentence") + "_pd.json"
+	target_file = open(target_filepath)
+	target_pitch_data = json.loads(target_file.read())
+
+	# analyze user's recording:
 	user_audio = request.form.get("user_file")
 	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_audio))
-	return user_pitch_data
+	return [target_pitch_data, user_pitch_data]
 
 
 
