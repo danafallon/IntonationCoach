@@ -13,6 +13,7 @@
   <br><br>
   <p>Now try to repeat with the same intonation:</p>
   <button type="button" class="btn btn-danger" id="record">Record</button>
+  <button type="button" class="btn btn-primary" id="play-back">Play back</button>
   <button type="button" class="btn btn-default" id="analyze">Compare!</button>
   <!-- TODO: make Compare button unpressable until a recording is started & stopped -->
   <br><br>
@@ -29,9 +30,9 @@
 var buf = null;
 
 //create AudioContext
-var context = new AudioContext();
+var context = new AudioContext;
 
-//load and decode wav file 
+//load and decode wav file - can't use ajax bc it doesn't support responseType?
 function loadFile(url) { 
     var request = new XMLHttpRequest(); 
     request.open("GET", url, true); 
@@ -58,66 +59,124 @@ function playSound() {
 } 
 
 
-// TODO: implement Recorder.js
-// var rec = new Recorder(source [, config])
+// set up recorder (using Recorder.js)
+var recorder;
+var userRecUrl;
+var userBlob;
 
+function startUserMedia(stream) {
+  var input = context.createMediaStreamSource(stream);
+  recorder = new Recorder(input);
+}
 
-function showAnalysis(recording) {
-  // send user's recording & sentence name to server & assign pitch data from response to variables
-  $.post('/analyze', { user_file: recording, sentence: 'supermarche' }, function(response) {
-      var targetPitchData = response[0];
-      var userPitchData = response[1];
-  });
+window.onload = function init() {
+  navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
 
-  // build graph
-  var data = {
-    "xScale": "linear",
-    "yScale": "linear",
-    "type": "line",
-    "main": [
-      {
-        "className": ".example",
-        "data": [     
-          {"x": 0.12, "y": 110},
-          {"x": 0.75, "y": 200},
-          {"x": 1.2, "y": 250},
-          {"x": 1.45, "y": 180},
-          {"x": 1.85, "y": 160}
-        ]
-      }
-    //   {
-    //     "className": ".user",
-    //     "data": userPitchData
-    //   }
-    ]
-  };
-
-  var opts = {
-    "axisPaddingRight": 0,
-    "axisPaddingLeft": 0
-  };
-
-  var myChart = new xChart('line', data, '#pitch-contour', opts);
-
-  // unhide graph
-  $('#pitch-contour').show();
+  navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+      console.log('Error: ', e);
+    });
 };
 
+// create object url for blob when exportWAV is called
+function myCallback(blob) {
+  userRecUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+  userBlob = blob;
+  console.log("myCallback ran");
+}
+
+
+// change appearance & function of buttons in response to user actions
 function handleRecord() {
   if ($('#record').html() == "Record") {
 
-    // rec.record();
+    recorder.record();
     $('#record').html("Stop");
   } else {
-    // rec.stop();
+    recorder.stop();
+    recorder.exportWAV(myCallback);
+    // console.log("in handleRecord, userRecUrl= ", userRecUrl);
     $('#record').html("Record");
     $('#analyze').removeAttr('disabled');
   }
 };
 
+// send user's recording & sentence name to server & assign pitch data from response to variables
+function showAnalysis(sentenceID, blob) {
+  var reader = new FileReader();
+  // this is triggered once the blob is read and readAsDataURL returns
+  reader.onload = function (event) {
+    var formData = new FormData();
+    formData.append('sentence', sentenceID);
+    formData.append('user_rec', event.target.result);
+    console.log(event.target.result);
+    // data used to be: { user_file: recording, sentence: 'supermarche' }
+    $.ajax({
+      type: "POST",
+      url: '/analyze',
+      data: formData, 
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      cache: false,
+      success: function(response) {
+        console.log(response);
+        // var targetPitchData = response[0];
+        // var userPitchData = response[1];
+        // console.log("userPitchData= ", userPitchData);
+      }
+    });
+  }
+  reader.readAsDataURL(blob);
+
+  // build graph
+  // var data = {
+  //   "xScale": "linear",
+  //   "yScale": "linear",
+  //   "type": "line",
+  //   "main": [
+  //     {
+  //       "className": ".example",
+  //       "data": targetPitchData  
+  //       //   {"x": 0.12, "y": 110},
+  //       //   {"x": 0.75, "y": 200},
+  //       //   {"x": 1.2, "y": 250},
+  //       //   {"x": 1.45, "y": 180},
+  //       //   {"x": 1.85, "y": 160}
+  //       // ]
+  //     },
+  //     {
+  //       "className": ".user",
+  //       "data": userPitchData
+  //     }
+  //   ]
+  // };
+
+  // var opts = {
+  //   "axisPaddingRight": 0,
+  //   "axisPaddingLeft": 0
+  // };
+
+  // var myChart = new xChart('line', data, '#pitch-contour', opts);
+
+  // // unhide graph
+  // $('#pitch-contour').show();
+
+  recorder.clear();
+};
+
+
+
+
 // play sample sentence when play button is pressed
 $('#play-sample1').on('click', function(evt) {
   loadFile("/sounds/supermarche2.wav");
+});
+
+$('#play-back').on('click', function(evt) {
+  loadFile(userRecUrl);
 });
 
 // hide graph until user has submitted recording
@@ -130,7 +189,9 @@ $('#analyze').attr('disabled','disabled');
 $('#record:not(.stop-btn)').on('click', handleRecord);
 
 // when Compare button is pressed, analyze user's recording & show graph
-$('#analyze').on('click', showAnalysis);
+$('#analyze').on('click', function(evt) {
+  showAnalysis('supermarche', userBlob);
+});
 
 </script>
 
