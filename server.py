@@ -1,10 +1,11 @@
 """Server for Intonation Coach."""
 
-from flask import Flask, render_template, session, send_from_directory, request
+from flask import Flask, render_template, session, send_from_directory, request, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 import json
 import base64
+from os import path
 
 import model
 from pitchgraph import praat_analyze_pitch, format_pitch_data
@@ -52,20 +53,22 @@ def analyze_user_rec():
 
 	# fetch target recording's pitch data:
 	target_filepath = request.form.get("sentence") + "_pd.json"
-	print target_filepath
 	target_file = open(target_filepath)
-	target_pitch_data = json.loads(target_file.read())
+	target_json = json.loads(target_file.read())
+	target_pitch_data = json.dumps(target_json, sort_keys=True)
+	print type(target_pitch_data)
+	target_file.close()
 
 	# analyze user's recording:
 	user_b64 = request.form.get("user_rec")[22:]
-	print len(user_b64)
 	user_wav = base64.b64decode(user_b64)
 	f = open('user-rec.wav', 'wb')
 	f.write(user_wav)
 	f.close()
+	user_rec_filepath = path.abspath('user-rec.wav')
 
-	user_pitch_data = format_pitch_data(praat_analyze_pitch('user-rec.wav'))
-	return [target_pitch_data, user_pitch_data]
+	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
+	return jsonify(target=target_pitch_data, user=user_pitch_data)
 
 
 

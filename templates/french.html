@@ -25,7 +25,7 @@
 
 <script>
 
-///// Audio player ////
+// Audio player setup
 
 var buf = null;
 
@@ -41,6 +41,7 @@ function loadFile(url) {
         //decode the loaded data 
         context.decodeAudioData(request.response, function(buffer) { 
             buf = buffer;
+            // call playSound() once buffer is loaded
             playSound();
         }); 
     }; 
@@ -60,6 +61,7 @@ function playSound() {
 
 
 // set up recorder (using Recorder.js)
+
 var recorder;
 var userRecUrl;
 var userBlob;
@@ -84,7 +86,6 @@ window.onload = function init() {
 function myCallback(blob) {
   userRecUrl = (window.URL || window.webkitURL).createObjectURL(blob);
   userBlob = blob;
-  console.log("myCallback ran");
 }
 
 
@@ -97,13 +98,14 @@ function handleRecord() {
   } else {
     recorder.stop();
     recorder.exportWAV(myCallback);
-    // console.log("in handleRecord, userRecUrl= ", userRecUrl);
+
     $('#record').html("Record");
     $('#analyze').removeAttr('disabled');
+    $('#play-back').removeAttr('disabled');
   }
 };
 
-// send user's recording & sentence name to server & assign pitch data from response to variables
+// send user's recording & sentence id to server, assign pitch data from response to variables, build graph
 function showAnalysis(sentenceID, blob) {
   var reader = new FileReader();
   // this is triggered once the blob is read and readAsDataURL returns
@@ -111,8 +113,6 @@ function showAnalysis(sentenceID, blob) {
     var formData = new FormData();
     formData.append('sentence', sentenceID);
     formData.append('user_rec', event.target.result);
-    console.log(event.target.result);
-    // data used to be: { user_file: recording, sentence: 'supermarche' }
     $.ajax({
       type: "POST",
       url: '/analyze',
@@ -122,51 +122,45 @@ function showAnalysis(sentenceID, blob) {
       dataType: 'json',
       cache: false,
       success: function(response) {
-        console.log(response);
-        // var targetPitchData = response[0];
-        // var userPitchData = response[1];
-        // console.log("userPitchData= ", userPitchData);
+        var targetPitchData = JSON.parse(response['target']);
+        var userPitchData = JSON.parse(response['user']);
+        buildGraph(targetPitchData, userPitchData);
       }
     });
   }
   reader.readAsDataURL(blob);
 
-  // build graph
-  // var data = {
-  //   "xScale": "linear",
-  //   "yScale": "linear",
-  //   "type": "line",
-  //   "main": [
-  //     {
-  //       "className": ".example",
-  //       "data": targetPitchData  
-  //       //   {"x": 0.12, "y": 110},
-  //       //   {"x": 0.75, "y": 200},
-  //       //   {"x": 1.2, "y": 250},
-  //       //   {"x": 1.45, "y": 180},
-  //       //   {"x": 1.85, "y": 160}
-  //       // ]
-  //     },
-  //     {
-  //       "className": ".user",
-  //       "data": userPitchData
-  //     }
-  //   ]
-  // };
-
-  // var opts = {
-  //   "axisPaddingRight": 0,
-  //   "axisPaddingLeft": 0
-  // };
-
-  // var myChart = new xChart('line', data, '#pitch-contour', opts);
-
-  // // unhide graph
-  // $('#pitch-contour').show();
-
   recorder.clear();
 };
+  
+function buildGraph(target, user) {
+  
+  var data = {
+    "xScale": "linear",
+    "yScale": "linear",
+    "type": "line",
+    "main": [
+      {
+        "className": ".target",
+        "data": target
+      },
+      {
+        "className": ".user",
+        "data": user
+      }
+    ]
+  };
 
+  var opts = {
+    "axisPaddingRight": 0,
+    "axisPaddingLeft": 0
+  };
+
+  var myChart = new xChart('line', data, '#pitch-contour', opts);
+
+  // unhide graph
+  $('#pitch-contour').show();
+}
 
 
 
@@ -182,7 +176,8 @@ $('#play-back').on('click', function(evt) {
 // hide graph until user has submitted recording
 $('#pitch-contour').hide();
 
-// disable compare button until user has recorded
+// disable playback & compare buttons until user has recorded
+$('#play-back').attr('disabled','disabled');
 $('#analyze').attr('disabled','disabled');
 
 // when Record/Stop button is pressed
