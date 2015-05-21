@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
 {% block body %}
 
+<style>
+#chart svg {
+  height: 400px;
+}
+
+.nvd3 g.nv-groups path.nv-line {
+  stroke-width: 4px;
+}
+</style>
+
+
 <div class="container-fluid">
 
-	<h1>French</h1>
+	<h1>English (US)</h1>
 	<br>
-	<p>Paragraph introducing the common intonation patterns in French.</p>
+	<p>Paragraph introducing the common intonation patterns.</p>
 	<br>
 
   <p>Example sentence 1</p>
@@ -20,7 +31,9 @@
 
 </div>
 
-<figure style="width: 1000px; height: 500px" id="pitch-contour"></figure>
+<div id="chart">
+  <svg></svg>
+</div>
 
 
 <script>
@@ -106,12 +119,11 @@ function handleRecord() {
 };
 
 // send user's recording & sentence id to server, assign pitch data from response to variables, build graph
-function showAnalysis(sentenceID, blob) {
+function showUserPitch(blob) {
   var reader = new FileReader();
   // this is triggered once the blob is read and readAsDataURL returns
   reader.onload = function (event) {
     var formData = new FormData();
-    formData.append('sentence', sentenceID);
     formData.append('user_rec', event.target.result);
     $.ajax({
       type: "POST",
@@ -122,9 +134,8 @@ function showAnalysis(sentenceID, blob) {
       dataType: 'json',
       cache: false,
       success: function(response) {
-        var targetPitchData = JSON.parse(response['target']);
-        var userPitchData = JSON.parse(response['user']);
-        buildGraph(targetPitchData, userPitchData);
+        userPitchData = JSON.parse(response['user']);
+        updateGraph();
       }
     });
   }
@@ -133,48 +144,102 @@ function showAnalysis(sentenceID, blob) {
   recorder.clear();
 };
   
-function buildGraph(target, user) {
-  
-  var data = {
-    "xScale": "linear",
-    "yScale": "linear",
-    "type": "line",
-    "main": [
-      {
-        "className": ".target",
-        "data": target
-      },
-      {
-        "className": ".user",
-        "data": user
-      }
-    ]
-  };
+var targetPitchData,
+    userPitchData,
+    chart
 
-  var opts = {
-    "axisPaddingRight": 0,
-    "axisPaddingLeft": 0,
-    "yMin": 75
-  };
+// build graph with NVD3
+function buildGraph() {
+  nv.addGraph(function() {
+    chart = nv.models.lineChart()
+      .useInteractiveGuideline(true)
+      .interpolate("basis");
 
-  var myChart = new xChart('line', data, '#pitch-contour', opts);
+    chart.xAxis
+      .axisLabel('Time (s)')
+      .tickFormat(d3.format(',.2f'));
 
-  // unhide graph
-  $('#pitch-contour').show();
+    chart.yAxis
+      .axisLabel('Pitch (Hz)')
+      .tickFormat(d3.format(',d'));
+
+    d3.select('#chart svg')
+      .datum(targetData())
+      .transition().duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+}
+
+function updateGraph() {
+  d3.select('#chart svg')
+    .datum(allData())
+    .transition().duration(500);
+
+    chart.update();
+}
+
+function targetData() {
+  return [
+    {
+      values: targetPitchData,
+      key: 'Sample recording'
+    }
+  ];
+}
+
+function allData() {
+  return [
+    {
+      values: targetPitchData,
+      key: 'Sample recording'
+    },
+    {
+      values: userPitchData,
+      key: 'Your recording',
+      color: '#ff7f0e'
+    }
+  ];
 }
 
 
-// play sample sentence when play button is pressed
+// when page loads, get target pitch data and build graph
+$.post('/targetdata', { sentence: 'supermarche' }, function(response) {
+  targetPitchData = JSON.parse(response['target']);
+  buildGraph();
+});
+
+
+// when play button is pressed, play sample sentence & animate play bar across graph
 $('#play-sample1').on('click', function(evt) {
   loadFile("/sounds/supermarche2.wav");
+  // create playbar
+  var svg = d3.select("#chart svg");
+  var playBar = svg.append("line")
+    .attr("x1", 60)
+    .attr("y1", 20)
+    .attr("x2", 60)
+    .attr("y2", 500)
+    .attr("stroke-width", 2)
+    .attr("stroke", "black");
+  // animate playbar
+  playBar.transition()
+    .attr("x1", 1120)   // sub in width of graph
+    .attr("x2", 1120)   // " " "
+    .duration(1840)     // sub in length of recording
+    .ease("linear")
+    .transition()
+      .delay(1840)      // length of recording again
+      .duration(200)
+      .remove();
 });
 
 $('#play-back').on('click', function(evt) {
   loadFile(userRecUrl);
 });
-
-// hide graph until user has submitted recording
-$('#pitch-contour').hide();
 
 // disable playback & compare buttons until user has recorded
 $('#play-back').attr('disabled','disabled');
@@ -185,7 +250,7 @@ $('#record:not(.stop-btn)').on('click', handleRecord);
 
 // when Compare button is pressed, analyze user's recording & show graph
 $('#analyze').on('click', function(evt) {
-  showAnalysis('supermarche', userBlob);
+  showUserPitch(userBlob);
 });
 
 </script>

@@ -1,6 +1,7 @@
 from praatinterface import PraatLoader
 from os import path
 import json
+from operator import itemgetter
 
 def praat_analyze_pitch(audio_file):
 	"""Given a wav file, use Praat to return a dictionary containing pitch (in Hz)
@@ -32,11 +33,14 @@ def format_pitch_data(pd):
 		datapoint["y"] = pd[t]
 		datapoints_list.append(datapoint)
 
-	return json.dumps(datapoints_list, sort_keys=True)
+	# sort the list by the value of "x"
+	datapoints_sorted = sorted(datapoints_list, key=itemgetter("x"))
+
+	return json.dumps(datapoints_sorted, sort_keys=True)
 
 
 if __name__ == "__main__":
-	audio_file = path.abspath('supermarche2.wav')
+	audio_file = path.abspath('./static/sounds/supermarche2.wav')
 	pitch_data = praat_analyze_pitch(audio_file)
 	json_pd = format_pitch_data(pitch_data)
 	print json_pd

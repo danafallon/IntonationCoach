@@ -304,7 +304,7 @@ _scales.xy = function (self, data, xType, yType) {
       .data(datum);
 
     fills.enter().append('path')
-      .attr('class', 'fill')
+      //.attr('class', 'fill')
       .style('opacity', 0)
       .attr('d', area.y0(y));
 

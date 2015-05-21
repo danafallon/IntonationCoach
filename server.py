@@ -39,6 +39,12 @@ def french_content():
 
 	return render_template("french.html")
 
+@app.route('/english-us')
+def other_lang():
+	"""Just for testing purposes - trying out different graphs"""
+
+	return render_template('english-us.html')
+
 
 @app.route('/<path:path>')
 def send_audio_file(path):
@@ -47,17 +53,31 @@ def send_audio_file(path):
 	return send_from_directory('static', path)
 
 
-@app.route('/analyze', methods=["POST"])
-def analyze_user_rec():
-	"""Analyze the user's recording and send pitch data for both recordings back to page."""
+@app.route('/targetdata', methods=["POST"])
+def send_target_pitch_data():
+	"""Sends pitch data from target recording to be displayed in graph when page loads."""
 
-	# fetch target recording's pitch data:
 	target_filepath = request.form.get("sentence") + "_pd.json"
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
 	target_pitch_data = json.dumps(target_json, sort_keys=True)
 	print type(target_pitch_data)
 	target_file.close()
+
+	return jsonify(target=target_pitch_data)
+
+
+@app.route('/analyze', methods=["POST"])
+def analyze_user_rec():
+	"""Analyze the user's recording and send pitch data for both recordings back to page."""
+
+	# # fetch target recording's pitch data:
+	# target_filepath = request.form.get("sentence") + "_pd.json"
+	# target_file = open(target_filepath)
+	# target_json = json.loads(target_file.read())
+	# target_pitch_data = json.dumps(target_json, sort_keys=True)
+	# # print type(target_pitch_data)
+	# target_file.close()
 
 	# analyze user's recording:
 	user_b64 = request.form.get("user_rec")[22:]
@@ -68,7 +88,7 @@ def analyze_user_rec():
 	user_rec_filepath = path.abspath('user-rec.wav')
 
 	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
-	return jsonify(target=target_pitch_data, user=user_pitch_data)
+	return jsonify(user=user_pitch_data)
 
 
 
