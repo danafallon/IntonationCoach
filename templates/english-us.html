@@ -2,7 +2,7 @@
 {% block body %}
 
 <style>
-#chart svg {
+.chart svg {
   height: 400px;
 }
 
@@ -20,20 +20,38 @@
 	<br>
 
   <p>Example sentence 1</p>
-  <button type="button" class="btn btn-primary" id="play-sample1">Play</button>
+  <button type="button" class="btn btn-primary" id="play-en-us-1">Play</button>
   <br><br>
   <p>Now try to repeat with the same intonation:</p>
-  <button type="button" class="btn btn-danger" id="record">Record</button>
-  <button type="button" class="btn btn-primary" id="play-back">Play back</button>
-  <button type="button" class="btn btn-default" id="analyze">Compare!</button>
-  <!-- TODO: make Compare button unpressable until a recording is started & stopped -->
+  <button type="button" class="btn btn-danger record en-us-1">Record</button>
+  <button type="button" class="btn btn-primary play-back en-us-1">Play back</button>
+  <button type="button" class="btn btn-default analyze en-us-1">Compare!</button>
+    <div class="loading en-us-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+    </div>
   <br><br>
 
-</div>
-
-<div id="chart">
+<div class="chart en-us-1">
   <svg></svg>
 </div>
+
+  <p>Example sentence 2</p>
+  <button type="button" class="btn btn-primary" id="play-en-us-2">Play</button>
+  <br><br>
+  <p>Now try to repeat with the same intonation:</p>
+  <button type="button" class="btn btn-danger record en-us-2">Record</button>
+  <button type="button" class="btn btn-primary play-back en-us-2">Play back</button>
+  <button type="button" class="btn btn-default analyze en-us-2">Compare!</button>
+    <div class="loading en-us-2" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+    </div>
+  <br><br>
+
+<div class="chart en-us-2">
+  <svg></svg>
+</div>
+
+
+</div>
+
 
 
 <script>
@@ -45,7 +63,7 @@ var buf = null;
 //create AudioContext
 var context = new AudioContext;
 
-//load and decode wav file - can't use ajax bc it doesn't support responseType?
+//load and decode wav file
 function loadFile(url) { 
     var request = new XMLHttpRequest(); 
     request.open("GET", url, true); 
@@ -103,23 +121,24 @@ function myCallback(blob) {
 
 
 // change appearance & function of buttons in response to user actions
-function handleRecord() {
-  if ($('#record').html() == "Record") {
+function handleRecord(exID) {
+  if ($('.record.'+exID).html() == "Record") {
 
     recorder.record();
-    $('#record').html("Stop");
+    $('.record.'+exID).html("Stop");
   } else {
     recorder.stop();
     recorder.exportWAV(myCallback);
 
-    $('#record').html("Record");
-    $('#analyze').removeAttr('disabled');
-    $('#play-back').removeAttr('disabled');
+    $('.record.'+exID).html("Record");
+    $('.analyze.'+exID).removeAttr('disabled');
+    $('.play-back.'+exID).removeAttr('disabled');
   }
 };
 
-// send user's recording & sentence id to server, assign pitch data from response to variables, build graph
-function showUserPitch(blob) {
+// send user's recording & sentence id to server, assign pitch data from response to variables, update graph
+function showUserPitch(blob, targetPitchData, exID) {
+  $('.loading.'+exID).show();
   var reader = new FileReader();
   // this is triggered once the blob is read and readAsDataURL returns
   reader.onload = function (event) {
@@ -134,8 +153,8 @@ function showUserPitch(blob) {
       dataType: 'json',
       cache: false,
       success: function(response) {
-        userPitchData = JSON.parse(response['user']);
-        updateGraph();
+        var userPitchData = JSON.parse(response['user']);
+        updateGraph(targetPitchData, userPitchData, exID);
       }
     });
   }
@@ -144,27 +163,26 @@ function showUserPitch(blob) {
   recorder.clear();
 };
   
-var targetPitchData,
-    userPitchData,
-    chart
+var chart
 
 // build graph with NVD3
-function buildGraph() {
+function buildGraph(targetPitchData, exID) {
   nv.addGraph(function() {
     chart = nv.models.lineChart()
       .useInteractiveGuideline(true)
-      .interpolate("basis");
+      .interpolate("basis")
+      .forceX([0, 2.0]);      // replace 2.0 with length of recording
 
     chart.xAxis
       .axisLabel('Time (s)')
-      .tickFormat(d3.format(',.2f'));
+      .tickFormat(d3.format(',.1f'));
 
     chart.yAxis
       .axisLabel('Pitch (Hz)')
       .tickFormat(d3.format(',d'));
 
-    d3.select('#chart svg')
-      .datum(targetData())
+    d3.select('.chart.'+exID+' svg')
+      .datum(targetData(targetPitchData))
       .transition().duration(500)
       .call(chart);
 
@@ -174,15 +192,16 @@ function buildGraph() {
   });
 }
 
-function updateGraph() {
-  d3.select('#chart svg')
-    .datum(allData())
+function updateGraph(targetPitchData, userPitchData, exID) {
+  d3.select('.chart.'+exID+' svg')
+    .datum(allData(targetPitchData, userPitchData))
     .transition().duration(500);
 
     chart.update();
+    $('.loading').hide();
 }
 
-function targetData() {
+function targetData(targetPitchData) {
   return [
     {
       values: targetPitchData,
@@ -191,7 +210,7 @@ function targetData() {
   ];
 }
 
-function allData() {
+function allData(targetPitchData, userPitchData) {
   return [
     {
       values: targetPitchData,
@@ -205,52 +224,65 @@ function allData() {
   ];
 }
 
+$('.loading').hide();
 
-// when page loads, get target pitch data and build graph
-$.post('/targetdata', { sentence: 'supermarche' }, function(response) {
-  targetPitchData = JSON.parse(response['target']);
-  buildGraph();
+// when loading page: for each sentence, get target pitch data and build graph
+$(document).ready(function() {
+  var numExamples = 2;    // set this to number of example sentences on page
+  for (var i = 1; i < (numExamples + 1); i++) {
+    $.post('/targetdata', { sentence: 'supermarche' }, function(response) {
+      var targetPitchData = JSON.parse(response['target']);
+      exID = 'en-us-'+i
+      buildGraph(targetPitchData, exID);
+    })
+  };
 });
 
 
 // when play button is pressed, play sample sentence & animate play bar across graph
-$('#play-sample1').on('click', function(evt) {
+$('#play-en-us-1').on('click', function(evt) {
   loadFile("/sounds/supermarche2.wav");
   // create playbar
-  var svg = d3.select("#chart svg");
+  var svg = d3.select('.chart.en-us-1 svg');
   var playBar = svg.append("line")
     .attr("x1", 60)
     .attr("y1", 20)
     .attr("x2", 60)
     .attr("y2", 500)
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 1)
     .attr("stroke", "black");
   // animate playbar
   playBar.transition()
     .attr("x1", 1120)   // sub in width of graph
     .attr("x2", 1120)   // " " "
-    .duration(1840)     // sub in length of recording
+    .duration(2000)     // sub in length of recording
     .ease("linear")
     .transition()
-      .delay(1840)      // length of recording again
+      .delay(2000)      // length of recording again
       .duration(200)
       .remove();
 });
 
-$('#play-back').on('click', function(evt) {
+$('.play-back').on('click', function(evt) {
   loadFile(userRecUrl);
 });
 
 // disable playback & compare buttons until user has recorded
-$('#play-back').attr('disabled','disabled');
-$('#analyze').attr('disabled','disabled');
+$('.play-back').attr('disabled','disabled');
+$('.analyze').attr('disabled','disabled');
 
 // when Record/Stop button is pressed
-$('#record:not(.stop-btn)').on('click', handleRecord);
+$('.record').on('click', function(evt) {
+  exID = $(this).attr("class").split(' ')[3];
+  console.log("record/stop", exID);
+  handleRecord(exID);
+});
 
 // when Compare button is pressed, analyze user's recording & show graph
-$('#analyze').on('click', function(evt) {
-  showUserPitch(userBlob);
+$('.analyze').on('click', function(evt) {
+  exID = $(this).attr("class").split(' ')[3];
+  console.log("analyze", exID);
+  showUserPitch(userBlob, exID);
 });
 
 </script>
