@@ -163,41 +163,43 @@ function showUserPitch(blob, targetPitchData, exID) {
   recorder.clear();
 };
   
-var chart
+var charts = []
 
 // build graph with NVD3
 function buildGraph(targetPitchData, exID) {
+  i = exID.slice(-1);
   nv.addGraph(function() {
-    chart = nv.models.lineChart()
+    charts[i] = nv.models.lineChart()
       .useInteractiveGuideline(true)
       .interpolate("basis")
       .forceX([0, 2.0]);      // replace 2.0 with length of recording
 
-    chart.xAxis
+    charts[i].xAxis
       .axisLabel('Time (s)')
       .tickFormat(d3.format(',.1f'));
 
-    chart.yAxis
+    charts[i].yAxis
       .axisLabel('Pitch (Hz)')
       .tickFormat(d3.format(',d'));
 
     d3.select('.chart.'+exID+' svg')
       .datum(targetData(targetPitchData))
       .transition().duration(500)
-      .call(chart);
+      .call(charts[i]);
 
-    nv.utils.windowResize(chart.update);
+    nv.utils.windowResize(charts[i].update);
 
-    return chart;
+    return charts[i];
   });
 }
 
 function updateGraph(targetPitchData, userPitchData, exID) {
+  i = exID.slice(-1);
   d3.select('.chart.'+exID+' svg')
     .datum(allData(targetPitchData, userPitchData))
     .transition().duration(500);
 
-    chart.update();
+    charts[i].update();
     $('.loading').hide();
 }
 
@@ -224,24 +226,7 @@ function allData(targetPitchData, userPitchData) {
   ];
 }
 
-$('.loading').hide();
-
-// when loading page: for each sentence, get target pitch data and build graph
-$(document).ready(function() {
-  var numExamples = 2;    // set this to number of example sentences on page
-  for (var i = 1; i < (numExamples + 1); i++) {
-    $.post('/targetdata', { sentence: 'supermarche' }, function(response) {
-      var targetPitchData = JSON.parse(response['target']);
-      exID = 'en-us-'+i
-      buildGraph(targetPitchData, exID);
-    })
-  };
-});
-
-
-// when play button is pressed, play sample sentence & animate play bar across graph
-$('#play-en-us-1').on('click', function(evt) {
-  loadFile("/sounds/supermarche2.wav");
+function animatePlaybar() {
   // create playbar
   var svg = d3.select('.chart.en-us-1 svg');
   var playBar = svg.append("line")
@@ -261,6 +246,30 @@ $('#play-en-us-1').on('click', function(evt) {
       .delay(2000)      // length of recording again
       .duration(200)
       .remove();
+}
+
+$('.loading').hide();
+
+
+var numExamples = 2;    // set this to number of example sentences on page
+
+
+// when loading page: for each sentence, get target pitch data and build graph
+$(document).ready(function() {
+  for (var i = 1; i < (numExamples + 1); i++) {
+    exID = 'en-us-'+i;
+    $.post('/targetdata', { sentence: 'supermarche' }, function(response) {
+      var targetPitchData = JSON.parse(response['target']);
+      buildGraph(targetPitchData, exID);
+    })
+  };
+});
+
+
+// when play button is pressed, play sample sentence & animate play bar across graph
+$('#play-en-us-1').on('click', function(evt) {
+  loadFile("/sounds/supermarche2.wav");
+  animatePlaybar();
 });
 
 $('.play-back').on('click', function(evt) {

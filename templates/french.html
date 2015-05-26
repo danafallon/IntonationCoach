@@ -13,29 +13,41 @@
 
 <div class="container-fluid">
 
-	<h1>French</h1>
-	<br>
-	<p>Paragraph introducing the common intonation patterns in French.</p>
-	<br>
+  <h1>French</h1>
+  <br>
 
-  <p>Example sentence 1</p>
-  <button type="button" class="btn btn-primary" id="play-sample1">Play</button>
-  <br><br>
-  <p>Now try to repeat with the same intonation:</p>
-  <button type="button" class="btn btn-danger" id="record">Record</button>
-  <button type="button" class="btn btn-primary" id="play-back">Play back</button>
-  <button type="button" class="btn btn-default" id="analyze">Compare!</button>
-    <div id="loading" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+  <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+    <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+    <li role="presentation"><a href="#ex1" data-toggle="tab">Example 1: Declarative</a></li>
+    <li role="presentation"><a href="#" data-toggle="tab">Example 2: Interrogative</a></li>
+  </ul>
+
+  <div id="my-tab-content" class="tab-content">
+    <div class="tab-pane active" id="overview">
+      <br>
+    	<p>Paragraph introducing the common intonation patterns in French.</p>
     </div>
 
-  <br><br>
+    <div class="tab-pane active" id="ex1">
+      <br>
+      <p>Example sentence 1</p>
+      <button type="button" class="btn btn-primary" id="play-sample">Play</button>
+      <br><br>
+      <p>Now try to repeat with the same intonation:</p>
+      <button type="button" class="btn btn-danger" id="record">Record</button>
+      <button type="button" class="btn btn-primary" id="play-back">Play back</button>
+      <button type="button" class="btn btn-default" id="analyze">Compare!</button>
+        <div id="loading" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+        </div>
+      <br><br>
+      <div id="chart">
+        <svg></svg>
+      </div>
+    </div>
+
+  </div>
 
 </div>
-
-<div id="chart">
-  <svg></svg>
-</div>
-
 
 <script>
 
@@ -148,12 +160,12 @@ var targetPitchData,
     chart
 
 // build graph with NVD3
-function buildGraph() {
+function buildGraph(rec_length) {
   nv.addGraph(function() {
     chart = nv.models.lineChart()
       .useInteractiveGuideline(true)
       .interpolate("basis")
-      .forceX([0, 2.0]);      // replace 2.0 with length of recording
+      .forceX([0, rec_length]);      
     
     chart.xAxis
       .axisLabel('Time (s)')
@@ -206,17 +218,7 @@ function allData() {
   ];
 }
 
-$('#loading').hide();
-
-// when page loads, get target pitch data and build graph
-$.post('/targetdata', { sentence: 'supermarche' }, function(response) {
-  targetPitchData = JSON.parse(response['target']);
-  buildGraph();
-});
-
-// when play button is pressed, play sample sentence & animate play bar across graph
-$('#play-sample1').on('click', function(evt) {
-  loadFile("/sounds/supermarche2.wav");
+function animatePlaybar() {
   // create playbar
   var svg = d3.select("#chart svg");
   var playBar = svg.append("line")
@@ -236,6 +238,25 @@ $('#play-sample1').on('click', function(evt) {
       .delay(2000)      // length of recording again
       .duration(200)
       .remove();
+}
+
+$('#loading').hide();
+
+// when page loads, get target pitch data and build graph
+$.post('/targetdata', { sentence: 'supermarche' }, function(response) {
+  targetPitchData = JSON.parse(response['target']);
+  buildGraph(2.0);
+});
+
+// make tabs responsive
+$(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+
+// when play button is pressed, play sample sentence & animate play bar across graph
+$('#play-sample').on('click', function(evt) {
+  loadFile("/sounds/supermarche2.wav");   // pass in sentence ID: "/sounds"+exID+".wav"
+  animatePlaybar();
 });
 
 $('#play-back').on('click', function(evt) {

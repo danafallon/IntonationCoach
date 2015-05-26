@@ -40,10 +40,17 @@ def french_content():
 	return render_template("french.html")
 
 @app.route('/english-us')
-def other_lang():
-	"""Just for testing purposes - trying out different graphs"""
+def english_content():
+	"""Display US English page."""
 
 	return render_template('english-us.html')
+
+
+@app.route('/russian')
+def russian_content():
+	"""Display Russian page."""
+
+	return render_template('russian.html')
 
 
 @app.route('/<path:path>')
