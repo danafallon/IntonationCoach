@@ -14,13 +14,13 @@
 
   <div id="my-tab-content" class="tab-content">
     
-    <div class="tab-pane active" id="overview">
+    <div class="tab-pane fade in active" id="overview">
       <br>
     	<p>Paragraph introducing the common intonation patterns in French.</p>
       <br>
     </div>
 
-    <div class="tab-pane" id="ex1">
+    <div class="tab-pane fade" id="ex1">
       <br>
       <p>Example sentence 1</p>
       <button type="button" class="btn btn-primary play fr-1">Play</button>
@@ -47,6 +47,7 @@
 <script>
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
+  $('.chart').hide();
   exID = 'fr-1';
   recLength = 2.0;
   loadTab(exID, recLength);

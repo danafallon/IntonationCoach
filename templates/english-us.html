@@ -14,13 +14,13 @@
 
   <div id="my-tab-content" class="tab-content">
 
-    <div class="tab-pane active" id="overview">
+    <div class="tab-pane fade in active" id="overview">
       <br>
     	<p>Paragraph introducing the common intonation patterns.</p>
     	<br>
     </div>
 
-    <div class="tab-pane" id="ex1">
+    <div class="tab-pane fade" id="ex1">
       <br>
       <p>Example sentence 1</p>
       <button type="button" class="btn btn-primary play en-us-1">Play</button>
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div class="tab-pane" id="ex2">
+    <div class="tab-pane fade" id="ex2">
       <br>
       <p>Example sentence 2</p>
       <button type="button" class="btn btn-primary play en-us-2">Play</button>
@@ -67,12 +67,14 @@
 // when user navigates to a tab, reassign global variables exID & recLength with values specific to that example sentence
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
+  $('.chart').hide();
   exID = 'en-us-1';
   recLength = 2.0;
   loadTab(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
+  $('.chart').hide();
   exID = 'en-us-2';
   recLength = 2.0;
   loadTab(exID, recLength);

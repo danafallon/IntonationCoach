@@ -63,17 +63,31 @@ function myCallback(blob) {
 // change buttons & trigger animation when user clicks record button
 function handleRecord(exID, recLength) {
   if ($('.record.'+exID).html() == "Record") {
-    recorder.record();
-    $('.record.'+exID).html("Stop");
-    animatePlaybar(recLength);
+    startRecord(exID, recLength);
+    setTimeout(function () { 
+      stopRecord(exID); 
+    }, (recLength*1000));
   } else {
-    recorder.stop();
-    recorder.exportWAV(myCallback);
-    $('.record.'+exID).html("Record");
-    $('.analyze.'+exID).removeAttr('disabled');
-    $('.play-back.'+exID).removeAttr('disabled');
+    stopRecord(exID);
+    playBar.remove();
   }
 };
+
+function startRecord(exID, recLength) {
+  recorder.clear();
+  recorder.record();
+  $('.record.'+exID).html("Stop");
+  animatePlaybar(recLength);
+}
+
+function stopRecord(exID) {
+  recorder.stop();
+  recorder.exportWAV(myCallback);
+  $('.record.'+exID).html("Record");
+  $('.analyze.'+exID).removeAttr('disabled');
+  $('.play-back.'+exID).removeAttr('disabled');
+}
+
 
 var targetPitchData;
 
@@ -168,10 +182,12 @@ function allData(targetPitchData, userPitchData) {
   ];
 }
 
+var playBar;
+
 function animatePlaybar(recLength) {
   // create playbar
   var svg = d3.selectAll(".chart svg");
-  var playBar = svg.append("line")
+  playBar = svg.append("line")
     .attr("x1", 60)
     .attr("y1", 20)
     .attr("x2", 60)
@@ -199,6 +215,7 @@ function loadTab(exID, recLength) {
   $.post('/targetdata', { sentence: exID }, function(response) {
     targetPitchData = JSON.parse(response['target']);
     buildGraph(targetPitchData, exID, recLength);
+    $('.chart').show();
   });
 }
 
@@ -240,9 +257,5 @@ $(document).on('hidden.bs.tab', 'a[data-toggle="tab"]', function (e) {
   $('.play-back').attr('disabled','disabled');
   $('.analyze').attr('disabled','disabled'); 
 });
-
-
-
-
 
 
