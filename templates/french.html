@@ -1,16 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
 
-<style>
-#chart svg {
-  height: 400px;
-}
-
-.nvd3 g.nv-groups path.nv-line {
-  stroke-width: 4px;
-}
-</style>
-
 <div class="container-fluid">
 
   <h1>French</h1>
@@ -19,28 +9,30 @@
   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
     <li role="presentation"><a href="#ex1" data-toggle="tab">Example 1: Declarative</a></li>
-    <li role="presentation"><a href="#" data-toggle="tab">Example 2: Interrogative</a></li>
+    <li role="presentation"><a href="#ex2" data-toggle="tab">Example 2: Interrogative</a></li>
   </ul>
 
   <div id="my-tab-content" class="tab-content">
+    
     <div class="tab-pane active" id="overview">
       <br>
     	<p>Paragraph introducing the common intonation patterns in French.</p>
+      <br>
     </div>
 
-    <div class="tab-pane active" id="ex1">
+    <div class="tab-pane" id="ex1">
       <br>
       <p>Example sentence 1</p>
-      <button type="button" class="btn btn-primary" id="play-sample">Play</button>
+      <button type="button" class="btn btn-primary play fr-1">Play</button>
       <br><br>
       <p>Now try to repeat with the same intonation:</p>
-      <button type="button" class="btn btn-danger" id="record">Record</button>
-      <button type="button" class="btn btn-primary" id="play-back">Play back</button>
-      <button type="button" class="btn btn-default" id="analyze">Compare!</button>
-        <div id="loading" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+      <button type="button" class="btn btn-danger record fr-1">Record</button>
+      <button type="button" class="btn btn-primary play-back fr-1">Play back</button>
+      <button type="button" class="btn btn-default analyze fr-1">Compare!</button>
+        <div class="loading" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
         </div>
       <br><br>
-      <div id="chart">
+      <div class="chart fr-1">
         <svg></svg>
       </div>
     </div>
@@ -49,230 +41,15 @@
 
 </div>
 
+
+<script src="../static/js/script.js"></script>
+
 <script>
 
-// Audio player setup
-
-var buf = null;
-
-//create AudioContext
-var context = new AudioContext;
-
-//load and decode wav file - can't use ajax bc it doesn't support responseType?
-function loadFile(url) { 
-    var request = new XMLHttpRequest(); 
-    request.open("GET", url, true); 
-    request.responseType = "arraybuffer"; 
-    request.onload = function() { 
-        //decode the loaded data 
-        context.decodeAudioData(request.response, function(buffer) { 
-            buf = buffer;
-            // call playSound() once buffer is loaded
-            playSound();
-        }); 
-    }; 
-    request.send(); 
-} 
-
-//play the loaded file 
-function playSound() { 
-    //create a source node from the buffer 
-    var src = context.createBufferSource();  
-    src.buffer = buf; 
-    //connect to the final output node (the speakers) 
-    src.connect(context.destination); 
-    //play immediately 
-    src.start(0); 
-} 
-
-// set up recorder (using Recorder.js)
-
-var recorder;
-var userRecUrl;
-var userBlob;
-
-function startUserMedia(stream) {
-  var input = context.createMediaStreamSource(stream);
-  recorder = new Recorder(input);
-}
-
-window.onload = function init() {
-  navigator.getUserMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia);
-  navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-      console.log('Error: ', e);
-    });
-};
-
-// create object url for blob when exportWAV is called
-function myCallback(blob) {
-  userRecUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-  userBlob = blob;
-}
-
-// change appearance & function of buttons in response to user actions
-function handleRecord() {
-  if ($('#record').html() == "Record") {
-    recorder.record();
-
-    $('#record').html("Stop");
-  } else {
-    recorder.stop();
-    recorder.exportWAV(myCallback);
-
-    $('#record').html("Record");
-    $('#analyze').removeAttr('disabled');
-    $('#play-back').removeAttr('disabled');
-  }
-};
-
-// send user's recording & sentence id to server, assign pitch data from response to variables, build graph
-function showUserPitch(blob) {
-    $('#loading').show();
-  var reader = new FileReader();
-  // this is triggered once the blob is read and readAsDataURL returns
-  reader.onload = function (event) {
-    var formData = new FormData();
-    formData.append('user_rec', event.target.result);
-    $.ajax({
-      type: "POST",
-      url: '/analyze',
-      data: formData, 
-      processData: false,
-      contentType: false,
-      dataType: 'json',
-      cache: false,
-      success: function(response) {
-        userPitchData = JSON.parse(response['user']);
-        updateGraph();
-      }
-    });
-  }
-  reader.readAsDataURL(blob);
-
-  recorder.clear();
-};
-  
-var targetPitchData,
-    userPitchData,
-    chart
-
-// build graph with NVD3
-function buildGraph(rec_length) {
-  nv.addGraph(function() {
-    chart = nv.models.lineChart()
-      .useInteractiveGuideline(true)
-      .interpolate("basis")
-      .forceX([0, rec_length]);      
-    
-    chart.xAxis
-      .axisLabel('Time (s)')
-      .tickFormat(d3.format(',.1f'));
-    
-    chart.yAxis
-      .axisLabel('Pitch (Hz)')
-      .tickFormat(d3.format(',d'));
-    
-    d3.select('#chart svg')
-      .datum(targetData())
-      .transition().duration(500)
-      .call(chart);
-    
-    nv.utils.windowResize(chart.update);
-    
-    return chart;
-  });
-}
-
-function updateGraph() {
-  d3.select('#chart svg')
-    .datum(allData())
-    .transition().duration(500);
-    
-    chart.update();
-    $('#loading').hide();
-}
-
-function targetData() {
-  return [
-    {
-      values: targetPitchData,
-      key: 'Sample recording'
-    }
-  ];
-}
-
-function allData() {
-  return [
-    {
-      values: targetPitchData,
-      key: 'Sample recording'
-    },
-    {
-      values: userPitchData,
-      key: 'Your recording',
-      color: '#ff7f0e'
-    }
-  ];
-}
-
-function animatePlaybar() {
-  // create playbar
-  var svg = d3.select("#chart svg");
-  var playBar = svg.append("line")
-    .attr("x1", 60)
-    .attr("y1", 20)
-    .attr("x2", 60)
-    .attr("y2", 500)
-    .attr("stroke-width", 1)
-    .attr("stroke", "black");
-  // animate playbar
-  playBar.transition()
-    .attr("x1", 1120)   // sub in width of graph
-    .attr("x2", 1120)   // " " "
-    .duration(2000)     // sub in length of recording
-    .ease("linear")
-    .transition()
-      .delay(2000)      // length of recording again
-      .duration(200)
-      .remove();
-}
-
-$('#loading').hide();
-
-// when page loads, get target pitch data and build graph
-$.post('/targetdata', { sentence: 'supermarche' }, function(response) {
-  targetPitchData = JSON.parse(response['target']);
-  buildGraph(2.0);
-});
-
-// make tabs responsive
-$(document).ready(function ($) {
-        $('#tabs').tab();
-    });
-
-// when play button is pressed, play sample sentence & animate play bar across graph
-$('#play-sample').on('click', function(evt) {
-  loadFile("/sounds/supermarche2.wav");   // pass in sentence ID: "/sounds"+exID+".wav"
-  animatePlaybar();
-});
-
-$('#play-back').on('click', function(evt) {
-  loadFile(userRecUrl);
-});
-
-// disable playback & compare buttons until user has recorded
-$('#play-back').attr('disabled','disabled');
-$('#analyze').attr('disabled','disabled');
-
-// when Record/Stop button is pressed
-$('#record').on('click', handleRecord);
-
-// when Compare button is pressed, analyze user's recording & show graph
-$('#analyze').on('click', function(evt) {
-  showUserPitch(userBlob);
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
+  exID = 'fr-1';
+  recLength = 2.0;
+  loadTab(exID, recLength);
 });
 
 </script>

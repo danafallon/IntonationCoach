@@ -1,53 +1,12 @@
 {% extends 'base.html' %}
 {% block body %}
 
-	<div class="container">
+	<div class="container-fluid">
 
 		<h1>About Intonation Coach</h1>
-
+		<br>
 		<p>This will explain a bit about how this app works.</p>
 
-		<button type="button" class="btn btn-primary" id="play-sample1">Play</button>
-
 	</div>
-
-<script>
-
-//basic working version of audio player (put on this page to test in isolation, won't actually stay here)
-
-var buf = null;
-
-//create AudioContext
-var context = new AudioContext();
-
-//load and decode wav file 
-function loadFile() { 
-    var request = new XMLHttpRequest(); 
-    request.open("GET", "/sounds/supermarche2.wav", true); 
-    request.responseType = "arraybuffer"; 
-    request.onload = function() { 
-        //decode the loaded data 
-        context.decodeAudioData(request.response, function(buffer) { 
-            buf = buffer;
-            playSound();
-        }); 
-    }; 
-    request.send(); 
-} 
-
-//play the loaded file 
-function playSound() { 
-    //create a source node from the buffer 
-    var src = context.createBufferSource();  
-    src.buffer = buf; 
-    //connect to the final output node (the speakers) 
-    src.connect(context.destination); 
-    //play immediately 
-    src.start(0); 
-} 
-
-$('#play-sample1').on('click', loadFile)
-
-</script>
 
 {% endblock %}
