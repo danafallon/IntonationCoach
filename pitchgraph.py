@@ -40,7 +40,7 @@ def format_pitch_data(pd):
 
 
 if __name__ == "__main__":
-	audio_file = path.abspath('./static/sounds/supermarche2.wav')
+	audio_file = path.abspath('./static/sounds/en-us-3.wav')
 	pitch_data = praat_analyze_pitch(audio_file)
 	json_pd = format_pitch_data(pitch_data)
 	print json_pd

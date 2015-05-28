@@ -16,7 +16,7 @@
     
     <div class="tab-pane fade in active" id="overview">
       <br>
-    	<p>Paragraph introducing the common intonation patterns in French.</p>
+    	<p>Paragraphs introducing the common intonation patterns in French.</p>
       <br>
     </div>
 
@@ -47,9 +47,9 @@
 <script>
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
-  $('.chart').hide();
   exID = 'fr-1';
   recLength = 2.0;
+  $('.chart.'+exID).hide();
   loadTab(exID, recLength);
 });
 

@@ -63,7 +63,7 @@ def send_audio_file(path):
 def send_target_pitch_data():
 	"""Sends pitch data from target recording to be displayed in graph when page loads."""
 
-	target_filepath = request.form.get("sentence") + "_pd.json"
+	target_filepath = "./static/json/" + request.form.get("sentence") + "-pd.json"
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
 	target_pitch_data = json.dumps(target_json, sort_keys=True)
@@ -80,10 +80,10 @@ def analyze_user_rec():
 	# analyze user's recording:
 	user_b64 = request.form.get("user_rec")[22:]
 	user_wav = base64.b64decode(user_b64)
-	f = open('user-rec.wav', 'wb')
+	f = open('./static/sounds/user-rec.wav', 'wb')
 	f.write(user_wav)
 	f.close()
-	user_rec_filepath = path.abspath('user-rec.wav')
+	user_rec_filepath = path.abspath('./static/sounds/user-rec.wav')
 
 	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
 	return jsonify(user=user_pitch_data)

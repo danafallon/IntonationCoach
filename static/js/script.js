@@ -232,7 +232,14 @@ $(document).ready(function () {
   // when play button is pressed, play sample sentence & animate play bar across graph
   $('.play').on('click', function(evt) {
     loadFile("/sounds/"+exID+".wav");
+    console.log("/sounds/"+exID+".wav");
     animatePlaybar(recLength);
+  });
+
+  // for play buttons in overview tab, retrieve exID from classes & play that file
+  $('.ov-play').on('click', function(evt) {
+    exID = $(this).attr("class").split(' ')[3];
+    loadFile("/sounds/"+exID+".wav");
   });
 
   // when playback button is pressed, play user's recording

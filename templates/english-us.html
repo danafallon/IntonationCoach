@@ -2,30 +2,57 @@
 {% block body %}
 
 <div class="container-fluid">
-
 	<h1>English (US)</h1>
 	<br>
 
   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
     <li role="presentation"><a href="#ex1" data-toggle="tab">Example 1: Declarative</a></li>
-    <li role="presentation"><a href="#ex2" data-toggle="tab">Example 2: Interrogative</a></li>
+    <li role="presentation"><a href="#ex2" data-toggle="tab">Example 2: Imperative</a></li>
+    <li role="presentation"><a href="#ex3" data-toggle="tab">Example 3: Interrogative</a></li>
   </ul>
 
   <div id="my-tab-content" class="tab-content">
 
     <div class="tab-pane fade in active" id="overview">
-      <br>
-    	<p>Paragraph introducing the common intonation patterns.</p>
-    	<br>
+      <div class="row">
+        <div class="col-xs-8">
+          <br>
+        	<p>The most common intonation pattern in English is falling intonation, in which the pitch is lowest at the end of the sentence. Falling intonation is found in most declarative sentences (statements), as well as imperative (commands) and exclamatory sentences. For example: </p>
+          <blockquote>
+            <button type="button" class="btn btn-primary ov-play en-us-1"><span class="glyphicon glyphicon-play"></span></button>
+            <p>Declarative: “Yesterday, I went to the store and bought groceries.”</p><br>
+            <button type="button" class="btn btn-primary ov-play en-us-2"><span class="glyphicon glyphicon-play"></span></button>
+            <p>Imperative: “Open the book and turn to page 70.”</p>
+          </blockquote>
+        
+          <p>English has several different intonation patterns for various types of questions. A basic yes-or-no question has rising intonation, meaning the pitch is the highest at the end of the sentence:</p>
+          <blockquote>
+            <button type="button" class="btn btn-primary ov-play en-us-3"><span class="glyphicon glyphicon-play"></span></button>
+            <p>Interrogative: “Did you see the parade last weekend?”</p>
+          </blockquote>
+
+          <p>A question that presents multiple choices and asks the listener to pick one, known as an alternative interrogative, typically has rising intonation on the first option(s) and falling intonation on the last option.</p>
+          <blockquote>
+            <p>Alternative interrogative: “Should I call them, or send an email?”</p>
+          </blockquote>
+
+          <p>Tag questions are formed when a short question is tacked onto the end of a declarative sentence. These can have either rising or falling intonation at the end, depending on the speaker’s intent; rising intonation indicates that they are genuinely asking whether the preceding statement is true, while falling intonation means that the speaker is already sure of the answer. Note the difference in intonation of the following two sentences, despite them having the same words.</p>
+          <blockquote>
+            <p>Tag question: “You live in San Francisco, don’t you?”<br>
+            Rhetorical tag question: “You live in San Francisco, don’t you.”</p>
+        	</blockquote>
+          <br>
+        </div>
+      </div>
     </div>
 
     <div class="tab-pane fade" id="ex1">
       <br>
-      <p>Example sentence 1</p>
+      <p>“Yesterday, I went to the store and bought groceries.”</p>
       <button type="button" class="btn btn-primary play en-us-1">Play</button>
       <br><br>
-      <p>Now try to repeat with the same intonation:</p>
+      <p>Try to repeat with the same intonation:</p>
       <button type="button" class="btn btn-danger record en-us-1">Record</button>
       <button type="button" class="btn btn-primary play-back en-us-1">Play back</button>
       <button type="button" class="btn btn-default analyze en-us-1">Compare!</button>
@@ -34,15 +61,17 @@
       <br><br>
       <div class="chart en-us-1">
         <svg></svg>
+        <p class="text-center">Yesterday, I went to the store and bought groceries.</p>
+        <br><br>
       </div>
     </div>
 
     <div class="tab-pane fade" id="ex2">
       <br>
-      <p>Example sentence 2</p>
+      <p>"Open the book and turn to page 70."</p>
       <button type="button" class="btn btn-primary play en-us-2">Play</button>
       <br><br>
-      <p>Now try to repeat with the same intonation:</p>
+      <p>Try to repeat with the same intonation:</p>
       <button type="button" class="btn btn-danger record en-us-2">Record</button>
       <button type="button" class="btn btn-primary play-back en-us-2">Play back</button>
       <button type="button" class="btn btn-default analyze en-us-2">Compare!</button>
@@ -53,6 +82,25 @@
         <svg></svg>
       </div>
     </div>
+
+    <div class="tab-pane fade" id="ex3">
+      <br>
+      <p>"Did you see the parade last weekend?"</p>
+      <button type="button" class="btn btn-primary play en-us-3">Play</button>
+      <br><br>
+      <p>Try to repeat with the same intonation:</p>
+      <button type="button" class="btn btn-danger record en-us-3">Record</button>
+      <button type="button" class="btn btn-primary play-back en-us-3">Play back</button>
+      <button type="button" class="btn btn-default analyze en-us-3">Compare!</button>
+        <div class="loading en-us-3" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+        </div>
+      <br><br>
+      <div class="chart en-us-3">
+        <svg></svg>
+      </div>
+    </div>
+
+
 
   </div>
 
@@ -67,16 +115,23 @@
 // when user navigates to a tab, reassign global variables exID & recLength with values specific to that example sentence
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
-  $('.chart').hide();
   exID = 'en-us-1';
-  recLength = 2.0;
+  recLength = 3.5;
+  $('.chart.'+exID).hide();
   loadTab(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
-  $('.chart').hide();
   exID = 'en-us-2';
-  recLength = 2.0;
+  recLength = 3.0;
+  $('.chart.'+exID).hide();
+  loadTab(exID, recLength);
+});
+
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
+  exID = 'en-us-3';
+  recLength = 3.0;
+  $('.chart.'+exID).hide();
   loadTab(exID, recLength);
 });
 
