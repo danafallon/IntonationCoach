@@ -1,7 +1,5 @@
 env
 *.pyc
 Praat.app
-*.wav
-t*.txt
-p*.txt
+user-rec.wav
 .DS_Store

@@ -7,7 +7,7 @@ import json
 import base64
 from os import path
 
-import model
+from model import Recording, connect_to_db, db
 from pitchgraph import praat_analyze_pitch, format_pitch_data
 
 
@@ -42,7 +42,7 @@ def french_content():
 def english_content():
 	"""Display US English page."""
 
-	return render_template('english-us.html')
+	return render_template('english-us.html', attempts=[])
 
 
 @app.route('/russian')
@@ -61,24 +61,33 @@ def send_audio_file(path):
 
 @app.route('/targetdata', methods=["POST"])
 def send_target_pitch_data():
-	"""Sends pitch data from target recording to be displayed in graph when page loads."""
+	"""Sends pitch data from target recording to be displayed in graph when tab loads. Also sends the user's past attempts at this sentence, if any."""
 
-	target_filepath = "./static/json/" + request.form.get("sentence") + "-pd.json"
+	ex_id = request.form.get("sentence")
+	target_filepath = "./static/json/" + ex_id + "-pd.json"
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
 	target_pitch_data = json.dumps(target_json, sort_keys=True)
 	# print type(target_pitch_data)
 	target_file.close()
 
-	return jsonify(target=target_pitch_data)
+	attempts = Recording.query.filter_by(ex_id=ex_id).all()
+	if not attempts:
+		attempts = []
+	attempts_serialized = [attempt.serialize() for attempt in attempts]
+
+	return jsonify(target=target_pitch_data, attempts=attempts_serialized)
 
 
 @app.route('/analyze', methods=["POST"])
 def analyze_user_rec():
-	"""Analyze the user's recording and send pitch data back to page."""
+	"""Analyze the user's recording, save the audio blob and pitch data to database, and send pitch data back to page."""
 
 	# analyze user's recording:
-	user_b64 = request.form.get("user_rec")[22:]
+	user_b64 = request.form.get("user_rec")[22:]		# cut off first 22 chars ("data:audio/wav;base64,")
+	# print type(user_b64)
+	# print len(user_b64)
+
 	user_wav = base64.b64decode(user_b64)
 	f = open('./static/sounds/user-rec.wav', 'wb')
 	f.write(user_wav)
@@ -86,13 +95,38 @@ def analyze_user_rec():
 	user_rec_filepath = path.abspath('./static/sounds/user-rec.wav')
 
 	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
+	# print type(user_pitch_data)
+	# print len(user_pitch_data)
+
+	# store audio blob (user_b64) and user_pitch_data in db
+	ex_id = request.form.get("ex_id")
+	attempts = Recording.query.filter_by(ex_id=ex_id).all()		# list of recording objects
+	if attempts:
+		attempt_nums = []
+		for attempt in attempts:
+			attempt_nums.append(attempt.attempt_num)
+		next_attempt_num = 1 + max(attempt_nums)
+	else:
+		next_attempt_num = 1
+
+	new_rec = Recording(ex_id=ex_id, attempt_num=next_attempt_num, audio_blob=user_b64, pitch_data=user_pitch_data)
+	db.session.add(new_rec)
+	db.session.commit()
+
 	return jsonify(user=user_pitch_data)
+
+# @app.route('/attempts', methods=["POST"])
+# def send_past_attempts():
+# 	"""Get all the user's past recordings for this sentence and send them to be loaded in .attempts div."""
+
+# 	ex_id = request.form.get("ex_id")
+# 	attempts = Recording.query.filter_by(ex_id=ex_id).all()
 
 
 
 if __name__ == "__main__":
 	app.debug = True
-	# connect_to_db(app)
+	connect_to_db(app)
 
 	DebugToolbarExtension(app)
 	app.run()

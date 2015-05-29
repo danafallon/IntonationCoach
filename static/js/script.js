@@ -5,7 +5,7 @@ var buf = null;
 //create AudioContext
 var context = new AudioContext;
 
-//load and decode wav file - can't use ajax bc it doesn't support responseType?
+//load and decode wav file
 function loadFile(url) { 
     var request = new XMLHttpRequest(); 
     request.open("GET", url, true); 
@@ -99,6 +99,7 @@ function showUserPitch(blob, targetPitchData, exID) {
   reader.onload = function (event) {
     var formData = new FormData();
     formData.append('user_rec', event.target.result);
+    formData.append('ex_id', exID);
     $.ajax({
       type: "POST",
       url: '/analyze',
@@ -209,16 +210,23 @@ function animatePlaybar(recLength) {
 // initialize variables that will be reassigned each time a tab is shown
 var exID;
 var recLength;
+var attempts;
 
 // get target pitch data from server & build graph (will be called each time a tab is shown)
 function loadTab(exID, recLength) {
   $.post('/targetdata', { sentence: exID }, function(response) {
     targetPitchData = JSON.parse(response['target']);
+    console.log(response['attempts']);
+    console.log(response['target']);
+    attempts = JSON.parse(response['attempts']);
     buildGraph(targetPitchData, exID, recLength);
     $('.chart').show();
   });
 }
 
+// function loadAttempts(exID) {
+//   $('.attempts').load('/attempts', {  })
+// }
 
 // when page loads:
 $(document).ready(function () {
@@ -232,7 +240,6 @@ $(document).ready(function () {
   // when play button is pressed, play sample sentence & animate play bar across graph
   $('.play').on('click', function(evt) {
     loadFile("/sounds/"+exID+".wav");
-    console.log("/sounds/"+exID+".wav");
     animatePlaybar(recLength);
   });
 
@@ -264,5 +271,4 @@ $(document).on('hidden.bs.tab', 'a[data-toggle="tab"]', function (e) {
   $('.play-back').attr('disabled','disabled');
   $('.analyze').attr('disabled','disabled'); 
 });
-
 

@@ -49,20 +49,32 @@
 
     <div class="tab-pane fade" id="ex1">
       <br>
-      <p>“Yesterday, I went to the store and bought groceries.”</p>
-      <button type="button" class="btn btn-primary play en-us-1">Play</button>
-      <br><br>
-      <p>Try to repeat with the same intonation:</p>
-      <button type="button" class="btn btn-danger record en-us-1">Record</button>
-      <button type="button" class="btn btn-primary play-back en-us-1">Play back</button>
-      <button type="button" class="btn btn-default analyze en-us-1">Compare!</button>
-        <div class="loading en-us-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+      <div class="row">
+        <div class="col-xs-8">
+          <p>“Yesterday, I went to the store and bought groceries.”</p>
+          <button type="button" class="btn btn-primary play en-us-1">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-1">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-1">Play back</button>
+          <button type="button" class="btn btn-default analyze en-us-1">Compare!</button>
+            <div class="loading en-us-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-1">
+            <svg></svg>
+            <p class="text-center">Yesterday, I went to the store and bought groceries.</p>
+            <br><br>
+          </div>
         </div>
-      <br><br>
-      <div class="chart en-us-1">
-        <svg></svg>
-        <p class="text-center">Yesterday, I went to the store and bought groceries.</p>
-        <br><br>
+        <div class="col-xs-4">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-1">
+          {% for attempt in attempts %}
+            <button type="button" class="btn btn-primary play-attempt {{ attempt.attempt_num }}">#{{ attempt.attempt_num }}</button>
+          {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
 
