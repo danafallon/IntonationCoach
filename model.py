@@ -8,14 +8,14 @@ db = SQLAlchemy()
 # Model definitions
 
 class Recording(db.Model):
-	"""User recording, containing both the audio blob and the json pitch data."""
+	"""User recording, containing both the audio data and the json pitch data."""
 
 	__tablename__ = "Recordings"
 
 	rec_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	ex_id = db.Column(db.String(15), nullable=False)
 	attempt_num = db.Column(db.Integer, nullable=False)
-	audio_blob = db.Column(db.String(4000000))
+	audio_data = db.Column(db.String(4000000))
 	pitch_data = db.Column(db.String(1000000))
 
 	def __repr__(self):
@@ -28,7 +28,7 @@ class Recording(db.Model):
 			"rec_id": self.rec_id,
 			"ex_id": self.ex_id,
 			"attempt_num": self.attempt_num,
-			"audio_blob": self.audio_blob,
+			"audio_data": self.audio_data,
 			"pitch_data": self.pitch_data
 		}
 

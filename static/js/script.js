@@ -57,7 +57,6 @@ window.onload = function init() {
 // create object url for blob when exportWAV is called
 function myCallback(blob) {
   userRecUrl = (window.URL || window.webkitURL).createObjectURL(blob);
-  console.log(userRecUrl);
   userBlob = blob;
 }
 
@@ -110,8 +109,17 @@ function showUserPitch(blob, targetPitchData, exID) {
       dataType: 'json',
       cache: false,
       success: function(response) {
-        userPitchData = JSON.parse(response['user']);
+        userPitchData = JSON.parse(response['user_pitch_data']);
+        userAudioData = JSON.parse(response['user_audio_data']);
         updateGraph(targetPitchData, userPitchData, exID);
+
+        // add a play button for user's new recording
+        if ($('.attempts').is(':empty')) {
+          attemptNum = 1;
+        } else {
+          attemptNum = parseInt($('.attempts button:last-child').attr("class").split(' ')[3]) + 1;
+        };
+        addAttemptPlayBtn(attemptNum, userAudioData);
       }
     });
   }
@@ -208,6 +216,7 @@ function animatePlaybar(recLength) {
       .remove();
 }
 
+// turn audio data from database (saved as dataurl) back into a blob so it can be played
 function dataURItoBlob(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string
     var byteString;
@@ -216,7 +225,6 @@ function dataURItoBlob(dataURI) {
     } else {
         byteString = unescape(dataURI.split(',')[1]);
     }
-
     // separate out the mime component
     var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
@@ -225,10 +233,8 @@ function dataURItoBlob(dataURI) {
     for (var i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
-
     return new Blob([ia], {type:mimeString});
 }
-
 
 
 // initialize variables that will be reassigned each time a tab is shown
@@ -244,11 +250,12 @@ function loadTab(exID, recLength) {
     buildGraph(targetPitchData, exID, recLength);
     $('.chart').show();
     for (i = 0; i < attempts.length; i++) {
-      addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_blob"]);
+      addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_data"]);
     }
   });
 }
 
+// add a play button for each recording the user has already made for this sentence
 function addAttemptPlayBtn(attemptNum, attemptDataUrl) {
   newBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum)
     .html('#'+attemptNum)
@@ -260,7 +267,6 @@ function addAttemptPlayBtn(attemptNum, attemptDataUrl) {
     });
   $('.attempts').append(newBtn);
 }
-
 
 
 
@@ -299,6 +305,8 @@ $(document).ready(function () {
   // when Compare button is pressed, analyze user's recording & show graph
   $('.analyze').on('click', function (evt) {
     showUserPitch(userBlob, targetPitchData, exID);
+    $('.play-back').attr('disabled','disabled');
+    $('.analyze').attr('disabled','disabled');
   });
 });
 

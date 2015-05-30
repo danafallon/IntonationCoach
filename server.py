@@ -42,7 +42,7 @@ def french_content():
 def english_content():
 	"""Display US English page."""
 
-	return render_template('english-us.html', attempts=[])
+	return render_template('english-us.html')
 
 
 @app.route('/russian')
@@ -82,7 +82,7 @@ def send_target_pitch_data():
 
 @app.route('/analyze', methods=["POST"])
 def analyze_user_rec():
-	"""Analyze the user's recording, save the audio blob and pitch data to database, and send pitch data back to page."""
+	"""Analyze the user's recording, save the audio data and pitch data to database, and send pitch data back to page."""
 
 	# analyze user's recording:
 	user_b64 = request.form.get("user_rec")[22:]		# cut off first 22 chars ("data:audio/wav;base64,")
@@ -99,7 +99,7 @@ def analyze_user_rec():
 	# print type(user_pitch_data)
 	# print len(user_pitch_data)
 
-	# store audio blob (user_b64) and user_pitch_data in db
+	# store audio data (user_b64) and user_pitch_data in db
 	ex_id = request.form.get("ex_id")
 	attempts = Recording.query.filter_by(ex_id=ex_id).all()		# list of recording objects
 	if attempts:
@@ -110,11 +110,13 @@ def analyze_user_rec():
 	else:
 		next_attempt_num = 1
 
-	new_rec = Recording(ex_id=ex_id, attempt_num=next_attempt_num, audio_blob=user_b64, pitch_data=user_pitch_data)
+	new_rec = Recording(ex_id=ex_id, attempt_num=next_attempt_num, audio_data=user_b64, pitch_data=user_pitch_data)
 	db.session.add(new_rec)
 	db.session.commit()
 
-	return jsonify(user=user_pitch_data)
+	user_audio_data=json.dumps(user_b64)
+
+	return jsonify(user_pitch_data=user_pitch_data, user_audio_data=user_audio_data)
 
 
 
