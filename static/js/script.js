@@ -111,15 +111,17 @@ function showUserPitch(blob, targetPitchData, exID) {
       success: function(response) {
         userPitchData = JSON.parse(response['user_pitch_data']);
         userAudioData = JSON.parse(response['user_audio_data']);
-        updateGraph(targetPitchData, userPitchData, exID);
 
         // add a play button for user's new recording
-        if ($('.attempts').is(':empty')) {
+        if (!($('.attempts').html().trim())) {
           attemptNum = 1;
         } else {
           attemptNum = parseInt($('.attempts button:last-child').attr("class").split(' ')[3]) + 1;
         };
         addAttemptPlayBtn(attemptNum, userAudioData);
+
+        // add new recording's pitch data to graph
+        updateGraph(userPitchData, attemptNum);
       }
     });
   }
@@ -129,6 +131,13 @@ function showUserPitch(blob, targetPitchData, exID) {
 };
   
 var chart;
+
+var chartData = [
+  {
+    values: targetPitchData,
+    key: 'Target intonation'
+  }
+];
 
 // build graph with NVD3
 function buildGraph(targetPitchData, exID, recLength) {
@@ -147,7 +156,7 @@ function buildGraph(targetPitchData, exID, recLength) {
       .tickFormat(d3.format(',d'));
     
     d3.select('.chart.'+exID+' svg')
-      .datum(targetData(targetPitchData))
+      .datum(chartData)
       .transition().duration(500)
       .call(chart);
     
@@ -158,39 +167,44 @@ function buildGraph(targetPitchData, exID, recLength) {
 }
 
 // add user's pitch data to graph
-function updateGraph(targetPitchData, userPitchData, exID) {
+function updateGraph(userPitchData, attemptNum) {
+  chartData.push({
+    values: userPitchData,
+    key: 'Attempt #'+attemptNum
+  })
+  
   d3.select('.chart.'+exID+' svg')
-    .datum(allData(targetPitchData, userPitchData))
+    .datum(chartData)
     .transition().duration(500);
     
     chart.update();
     $('.loading').hide();
 }
 
-// create dataset with just target pitch data
-function targetData(targetPitchData) {
-  return [
-    {
-      values: targetPitchData,
-      key: 'Target intonation'
-    }
-  ];
-}
+// // create dataset with just target pitch data
+// function targetData(targetPitchData) {
+//   return [
+//     {
+//       values: targetPitchData,
+//       key: 'Target intonation'
+//     }
+//   ];
+// }
 
-// create dataset with target & user pitch data 
-function allData(targetPitchData, userPitchData) {
-  return [
-    {
-      values: targetPitchData,
-      key: 'Target intonation'
-    },
-    {
-      values: userPitchData,
-      key: 'Your intonation',
-      color: '#ff7f0e'
-    }
-  ];
-}
+// // create dataset with target & user pitch data 
+// function allData(targetPitchData, userPitchData) {
+//   return [
+//     {
+//       values: targetPitchData,
+//       key: 'Target intonation'
+//     },
+//     {
+//       values: userPitchData,
+//       key: 'Your intonation',
+//       color: '#ff7f0e'
+//     }
+//   ];
+// }
 
 var playBar;
 
@@ -249,9 +263,23 @@ function loadTab(exID, recLength) {
     attempts = response['attempts'];
     buildGraph(targetPitchData, exID, recLength);
     $('.chart').show();
-    for (i = 0; i < attempts.length; i++) {
-      addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_data"]);
-    }
+    // check whether .attempts div is empty before populating it with buttons
+    if (!($('.attempts').html().trim())) {
+      for (i = 0; i < attempts.length; i++) {
+        addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_data"]);
+      } 
+    };
+    // if there are attempts saved, add their pitch data to the graph
+    // if (attempts.length > 0) {
+    //   for (i = 0; i < attempts.length; i++) {
+    //     attemptNum = i + 1;
+    //     console.log(attempts[i]['pitch_data']);
+    //     chartData.push({
+    //       values: attempts[i]["pitch_data"],
+    //       key: 'Attempt #'+attemptNum
+    //     });
+    //   }
+    // }
   });
 }
 
