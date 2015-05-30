@@ -57,6 +57,7 @@ window.onload = function init() {
 // create object url for blob when exportWAV is called
 function myCallback(blob) {
   userRecUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+  console.log(userRecUrl);
   userBlob = blob;
 }
 
@@ -207,6 +208,29 @@ function animatePlaybar(recLength) {
       .remove();
 }
 
+function dataURItoBlob(dataURI) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+        byteString = atob(dataURI.split(',')[1]);
+    } else {
+        byteString = unescape(dataURI.split(',')[1]);
+    }
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], {type:mimeString});
+}
+
+
+
 // initialize variables that will be reassigned each time a tab is shown
 var exID;
 var recLength;
@@ -214,19 +238,31 @@ var attempts;
 
 // get target pitch data from server & build graph (will be called each time a tab is shown)
 function loadTab(exID, recLength) {
-  $.post('/targetdata', { sentence: exID }, function(response) {
+  $.post('/targetdata', { sentence: exID }, function (response) {
     targetPitchData = JSON.parse(response['target']);
-    console.log(response['attempts']);
-    console.log(response['target']);
-    attempts = JSON.parse(response['attempts']);
+    attempts = response['attempts'];
     buildGraph(targetPitchData, exID, recLength);
     $('.chart').show();
+    for (i = 0; i < attempts.length; i++) {
+      addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_blob"]);
+    }
   });
 }
 
-// function loadAttempts(exID) {
-//   $('.attempts').load('/attempts', {  })
-// }
+function addAttemptPlayBtn(attemptNum, attemptDataUrl) {
+  newBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum)
+    .html('#'+attemptNum)
+    .on('click', function (evt) {
+      var attemptBlob = dataURItoBlob("data:audio/wav;base64,"+attemptDataUrl);
+      var attemptObjUrl = (window.URL || window.webkitURL).createObjectURL(attemptBlob);
+      loadFile(attemptObjUrl);
+      animatePlaybar(recLength);
+    });
+  $('.attempts').append(newBtn);
+}
+
+
+
 
 // when page loads:
 $(document).ready(function () {
@@ -238,30 +274,30 @@ $(document).ready(function () {
   $('.analyze').attr('disabled','disabled');
 
   // when play button is pressed, play sample sentence & animate play bar across graph
-  $('.play').on('click', function(evt) {
+  $('.play').on('click', function (evt) {
     loadFile("/sounds/"+exID+".wav");
     animatePlaybar(recLength);
   });
 
   // for play buttons in overview tab, retrieve exID from classes & play that file
-  $('.ov-play').on('click', function(evt) {
+  $('.ov-play').on('click', function (evt) {
     exID = $(this).attr("class").split(' ')[3];
     loadFile("/sounds/"+exID+".wav");
   });
 
   // when playback button is pressed, play user's recording
-  $('.play-back').on('click', function(evt) {
+  $('.play-back').on('click', function (evt) {
     loadFile(userRecUrl);
     animatePlaybar(recLength);
   });
 
   // when Record/Stop button is pressed
-  $('.record').on('click', function(evt) {
+  $('.record').on('click', function (evt) {
     handleRecord(exID, recLength);
   });
 
   // when Compare button is pressed, analyze user's recording & show graph
-  $('.analyze').on('click', function(evt) {
+  $('.analyze').on('click', function (evt) {
     showUserPitch(userBlob, targetPitchData, exID);
   });
 });

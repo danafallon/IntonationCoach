@@ -68,13 +68,14 @@ def send_target_pitch_data():
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
 	target_pitch_data = json.dumps(target_json, sort_keys=True)
-	# print type(target_pitch_data)
+	# print type(target_pitch_data)			# target_pitch_data is type str
 	target_file.close()
 
 	attempts = Recording.query.filter_by(ex_id=ex_id).all()
 	if not attempts:
 		attempts = []
 	attempts_serialized = [attempt.serialize() for attempt in attempts]
+	# print type(attempts_serialized)		# attempts_serialized is type list
 
 	return jsonify(target=target_pitch_data, attempts=attempts_serialized)
 
@@ -114,13 +115,6 @@ def analyze_user_rec():
 	db.session.commit()
 
 	return jsonify(user=user_pitch_data)
-
-# @app.route('/attempts', methods=["POST"])
-# def send_past_attempts():
-# 	"""Get all the user's past recordings for this sentence and send them to be loaded in .attempts div."""
-
-# 	ex_id = request.form.get("ex_id")
-# 	attempts = Recording.query.filter_by(ex_id=ex_id).all()
 
 
 
