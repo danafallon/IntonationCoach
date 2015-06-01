@@ -129,18 +129,11 @@ function showUserPitch(blob, targetPitchData, exID) {
 
   recorder.clear();
 };
-  
-var chart;
 
-var chartData = [
-  {
-    values: targetPitchData,
-    key: 'Target intonation'
-  }
-];
 
 // build graph with NVD3
-function buildGraph(targetPitchData, exID, recLength) {
+function buildGraph(recLength) {
+  //console.log("chartData:", chartData);
   nv.addGraph(function() {
     chart = nv.models.lineChart()
       .useInteractiveGuideline(true)
@@ -255,13 +248,21 @@ function dataURItoBlob(dataURI) {
 var exID;
 var recLength;
 var attempts;
+var chart;
+var chartData;
 
 // get target pitch data from server & build graph (will be called each time a tab is shown)
 function loadTab(exID, recLength) {
   $.post('/targetdata', { sentence: exID }, function (response) {
     targetPitchData = JSON.parse(response['target']);
     attempts = response['attempts'];
-    buildGraph(targetPitchData, exID, recLength);
+    chartData = [
+      {
+        values: targetPitchData,
+        key: 'Target intonation'
+      }
+    ];
+    buildGraph(recLength);
     $('.chart').show();
     // check whether .attempts div is empty before populating it with buttons
     if (!($('.attempts').html().trim())) {
@@ -270,16 +271,15 @@ function loadTab(exID, recLength) {
       } 
     };
     // if there are attempts saved, add their pitch data to the graph
-    // if (attempts.length > 0) {
-    //   for (i = 0; i < attempts.length; i++) {
-    //     attemptNum = i + 1;
-    //     console.log(attempts[i]['pitch_data']);
-    //     chartData.push({
-    //       values: attempts[i]["pitch_data"],
-    //       key: 'Attempt #'+attemptNum
-    //     });
-    //   }
-    // }
+    if (attempts.length > 0) {
+      for (i = 0; i < attempts.length; i++) {
+        attemptNum = i + 1;
+        chartData.push({
+          values: JSON.parse(attempts[i]["pitch_data"]),
+          key: 'Attempt #'+attemptNum
+        });
+      }
+    }
   });
 }
 
@@ -294,6 +294,7 @@ function addAttemptPlayBtn(attemptNum, attemptDataUrl) {
       animatePlaybar(recLength);
     });
   $('.attempts').append(newBtn);
+  $('.attempts').append('<br> ');
 }
 
 
