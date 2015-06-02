@@ -111,14 +111,15 @@ function showUserPitch(blob, targetPitchData, exID) {
       success: function(response) {
         userPitchData = JSON.parse(response['user_pitch_data']);
         userAudioData = JSON.parse(response['user_audio_data']);
+        recID = JSON.parse(response['rec_id'])
 
         // add a play button for user's new recording
         if (!($('.attempts').html().trim())) {
           attemptNum = 1;
         } else {
-          attemptNum = parseInt($('.attempts button:last-child').attr("class").split(' ')[3]) + 1;
+          attemptNum = parseInt($('.attempts button:last-of-type').attr("class").split(' ')[3]) + 1;
         };
-        addAttemptPlayBtn(attemptNum, userAudioData);
+        addAttemptPlayBtn(attemptNum, recID, userAudioData);
 
         // add new recording's pitch data to graph
         updateGraph(userPitchData, attemptNum);
@@ -138,7 +139,7 @@ function buildGraph(recLength) {
     chart = nv.models.lineChart()
       .useInteractiveGuideline(true)
       .interpolate("basis")
-      .forceX([0, recLength]);      
+      .xDomain([0, recLength]);      
     
     chart.xAxis
       .axisLabel('Time (s)')
@@ -173,31 +174,6 @@ function updateGraph(userPitchData, attemptNum) {
     chart.update();
     $('.loading').hide();
 }
-
-// // create dataset with just target pitch data
-// function targetData(targetPitchData) {
-//   return [
-//     {
-//       values: targetPitchData,
-//       key: 'Target intonation'
-//     }
-//   ];
-// }
-
-// // create dataset with target & user pitch data 
-// function allData(targetPitchData, userPitchData) {
-//   return [
-//     {
-//       values: targetPitchData,
-//       key: 'Target intonation'
-//     },
-//     {
-//       values: userPitchData,
-//       key: 'Your intonation',
-//       color: '#ff7f0e'
-//     }
-//   ];
-// }
 
 var playBar;
 
@@ -264,19 +240,17 @@ function loadTab(exID, recLength) {
     ];
     buildGraph(recLength);
     $('.chart').show();
-    // check whether .attempts div is empty before populating it with buttons
-    if (!($('.attempts').html().trim())) {
-      for (i = 0; i < attempts.length; i++) {
-        addAttemptPlayBtn(attempts[i]["attempt_num"], attempts[i]["audio_data"]);
-      } 
+    // empty out .attempts div before populating it with buttons
+    $('.attempts').empty();
+    for (i = 0; i < attempts.length; i++) {
+      addAttemptPlayBtn(attempts[i]['attempt_num'], attempts[i]['rec_id'], attempts[i]['audio_data']);
     };
     // if there are attempts saved, add their pitch data to the graph
     if (attempts.length > 0) {
       for (i = 0; i < attempts.length; i++) {
-        attemptNum = i + 1;
         chartData.push({
-          values: JSON.parse(attempts[i]["pitch_data"]),
-          key: 'Attempt #'+attemptNum
+          values: JSON.parse(attempts[i]['pitch_data']),
+          key: 'Attempt #'+attempts[i]['attempt_num']
         });
       }
     }
@@ -284,17 +258,24 @@ function loadTab(exID, recLength) {
 }
 
 // add a play button for each recording the user has already made for this sentence
-function addAttemptPlayBtn(attemptNum, attemptDataUrl) {
-  newBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum)
-    .html('#'+attemptNum)
+function addAttemptPlayBtn(attemptNum, recID, attemptDataUrl) {
+  newPlayBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum+' '+recID)
+    .html('<span class="glyphicon glyphicon-play"></span>')
     .on('click', function (evt) {
       var attemptBlob = dataURItoBlob("data:audio/wav;base64,"+attemptDataUrl);
       var attemptObjUrl = (window.URL || window.webkitURL).createObjectURL(attemptBlob);
       loadFile(attemptObjUrl);
       animatePlaybar(recLength);
     });
-  $('.attempts').append(newBtn);
-  $('.attempts').append('<br> ');
+  newDelBtn = $('<button>').attr('class', 'btn btn-danger del-attempt '+attemptNum +' '+recID)
+    .html('Delete')
+    .on('click', function (evt) {
+      recID = $(this).attr("class").split(' ')[4];
+      $.post('/delete-attempt', { rec_id: recID }, function () {
+        loadTab(exID, recLength);
+      });
+    });
+  $('.attempts').append('#'+attemptNum+' ', newPlayBtn, ' ', newDelBtn, '<br><br>');
 }
 
 

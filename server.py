@@ -1,6 +1,6 @@
 """Server for Intonation Coach."""
 
-from flask import Flask, render_template, session, send_from_directory, request, jsonify
+from flask import Flask, render_template, session, send_from_directory, request, jsonify, flash, redirect, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 import json
@@ -116,7 +116,33 @@ def analyze_user_rec():
 
 	user_audio_data=json.dumps(user_b64)
 
-	return jsonify(user_pitch_data=user_pitch_data, user_audio_data=user_audio_data)
+	rec_id = new_rec.rec_id
+
+	return jsonify(user_pitch_data=user_pitch_data, user_audio_data=user_audio_data, rec_id=rec_id)
+
+
+@app.route('/delete-attempt', methods=["POST"])
+def delete_attempt():
+	"""Given the recording id of a user's attempt, delete that recording from the database."""
+
+	rec_id = request.form.get("rec_id")
+	rec = Recording.query.filter_by(rec_id=rec_id).one()
+	db.session.delete(rec)
+	db.session.commit()
+
+	current_url = redirect_url()
+	flash("Attempt deleted")
+	return redirect(current_url)
+
+
+
+######### Helper functions ##############
+
+def redirect_url(default='index'):
+    return request.args.get('next') or \
+           request.referrer or \
+           url_for(default)
+
 
 
 
@@ -124,5 +150,5 @@ if __name__ == "__main__":
 	app.debug = True
 	connect_to_db(app)
 
-	DebugToolbarExtension(app)
+	# DebugToolbarExtension(app)
 	app.run()

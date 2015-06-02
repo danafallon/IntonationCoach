@@ -2,6 +2,7 @@
 /* NVD3 chart styling */
 .chart svg {
   height: 400px;
+  width: 900px;
 }
 
 .nvd3 g.nv-groups path.nv-line {
