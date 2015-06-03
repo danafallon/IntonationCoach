@@ -5,8 +5,19 @@
   width: 900px;
 }
 
+.transcript svg {
+    height: 100px;
+    width: 900px;
+}
+
 .nvd3 g.nv-groups path.nv-line {
   stroke-width: 4px;
+}
+
+svg text {
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1;
 }
 
 

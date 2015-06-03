@@ -1,6 +1,6 @@
 """Server for Intonation Coach."""
 
-from flask import Flask, render_template, session, send_from_directory, request, jsonify, flash, redirect, url_for
+from flask import Flask, render_template, session, send_from_directory, request, jsonify, flash, redirect, url_for, Response
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 import json
@@ -17,6 +17,7 @@ app.secret_key = 'this-should-be-something-unguessable'
 
 app.jinja_env.undefined = jinja2.StrictUndefined
 
+response = Response()
 
 @app.route('/')
 def index():
@@ -131,8 +132,15 @@ def delete_attempt():
 	db.session.commit()
 
 	current_url = redirect_url()
-	flash("Attempt deleted")
 	return redirect(current_url)
+
+
+@app.after_request
+def add_header(response):
+    """Add header to cache the rendered page for 10 minutes."""
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma']= 'no-cache'
+    return response
 
 
 
