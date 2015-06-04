@@ -189,12 +189,12 @@ function animatePlaybar(recLength) {
     .attr("stroke", "black");
   // animate playbar
   playBar.transition()
-    .attr("x1", 1120)   // sub in width of graph
-    .attr("x2", 1120)   // " " "
-    .duration(recLength*1000)     // sub in length of recording
+    .attr("x1", 900)   // width of graph
+    .attr("x2", 900)
+    .duration(recLength*1000)
     .ease("linear")
     .transition()
-      .delay(recLength*1000)      // length of recording again
+      .delay(recLength*1000)
       .duration(200)
       .remove();
 }

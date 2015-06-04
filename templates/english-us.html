@@ -7,9 +7,12 @@
 
   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-    <li role="presentation"><a href="#ex1" data-toggle="tab">Example 1: Declarative</a></li>
-    <li role="presentation"><a href="#ex2" data-toggle="tab">Example 2: Imperative</a></li>
-    <li role="presentation"><a href="#ex3" data-toggle="tab">Example 3: Interrogative</a></li>
+    <li role="presentation"><a href="#ex1" data-toggle="tab">#1: Declarative</a></li>
+    <li role="presentation"><a href="#ex2" data-toggle="tab">#2: Imperative</a></li>
+    <li role="presentation"><a href="#ex3" data-toggle="tab">#3: Interrogative</a></li>
+    <li role="presentation"><a href="#ex4" data-toggle="tab">#4: Alternative Interrogative</a></li>
+    <li role="presentation"><a href="#ex5" data-toggle="tab">#5: Tag Question</a></li>
+    <li role="presentation"><a href="#ex6" data-toggle="tab">#6: Rhetorical Tag Question</a></li>
   </ul>
 
   <div id="my-tab-content" class="tab-content">
@@ -70,11 +73,12 @@
           </div>
           <div class="transcript">
             <svg>
-              <text text-anchor="middle" x="200" y="20" textLength="140px">Yesterday,</text>
-              <text text-anchor="middle" x="350" y="20" textLength="140px">I went to the</text>
-              <text text-anchor="middle" x="480" y="20" textLength="120px">store and</text>
-              <text text-anchor="middle" x="600" y="20" textLength="90px">bought</text>
-              <text text-anchor="middle" x="700" y="20" textLength="90px">groceries.</text>
+              <text text-anchor="start" x="165" y="20" textLength="145px">Yesterday,</text>
+              <text text-anchor="start" x="315" y="20" textLength="120px">I went to the</text>
+              <text text-anchor="start" x="445" y="20" textLength="60px">store</text>
+              <text text-anchor="start" x="520" y="20" textLength="30px">and</text>
+              <text text-anchor="start" x="560" y="20" textLength="70px">bought</text>
+              <text text-anchor="start" x="640" y="20" textLength="110px">groceries.</text>
             </svg>
 
             <br><br>
@@ -89,40 +93,195 @@
       </div>
     </div>
 
+
     <div class="tab-pane fade" id="ex2">
       <br>
-      <p>"Open the book and turn to page 70."</p>
-      <button type="button" class="btn btn-primary play en-us-2">Play</button>
-      <br><br>
-      <p>Try to repeat with the same intonation:</p>
-      <button type="button" class="btn btn-danger record en-us-2">Record</button>
-      <button type="button" class="btn btn-primary play-back en-us-2">Play Back</button>
-      <button type="button" class="btn btn-default analyze en-us-2">Save & Compare</button>
-        <div class="loading en-us-2" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+      <div class="row">
+        <div class="col-xs-10">
+          <p>"Open the book and turn to page 70."</p>
+          <button type="button" class="btn btn-primary play en-us-2">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-2">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-2">Play Back</button>
+          <button type="button" class="btn btn-default analyze en-us-2">Save & Compare</button>
+            <div class="loading en-us-2" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-2">
+            <svg></svg>
+          </div>
+          <div class="transcript">
+            <svg>
+              <text text-anchor="start" x="165" y="20" textLength="100px">Open the</text>
+              <text text-anchor="start" x="280" y="20" textLength="80px">book</text>
+              <text text-anchor="start" x="380" y="20" textLength="130px">and turn to</text>
+              <text text-anchor="start" x="540" y="20" textLength="90px">page</text>
+              <text text-anchor="start" x="650" y="20" textLength="170px">seventy.</text>
+            </svg>
+            <br><br>
+          </div>
+          
         </div>
-      <br><br>
-      <div class="chart en-us-2">
-        <svg></svg>
+        <div class="col-xs-2">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-2">
+
+          </div>
+        </div>
       </div>
     </div>
+
 
     <div class="tab-pane fade" id="ex3">
       <br>
-      <p>"Did you see the parade last weekend?"</p>
-      <button type="button" class="btn btn-primary play en-us-3">Play</button>
-      <br><br>
-      <p>Try to repeat with the same intonation:</p>
-      <button type="button" class="btn btn-danger record en-us-3">Record</button>
-      <button type="button" class="btn btn-primary play-back en-us-3">Play Back</button>
-      <button type="button" class="btn btn-default analyze en-us-3">Save & Compare</button>
-        <div class="loading en-us-3" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+      <div class="row">
+        <div class="col-xs-10">
+          <p>"Did you see the parade last weekend?"</p>
+          <button type="button" class="btn btn-primary play en-us-3">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-3">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-3">Play Back</button>
+          <button type="button" class="btn btn-default analyze en-us-3">Save & Compare</button>
+            <div class="loading en-us-3" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-3">
+            <svg></svg>
+          </div>
+          <div class="transcript">
+            <svg>
+              <text text-anchor="start" x="200" y="20" textLength="100px">Did you</text>
+              <text text-anchor="start" x="310" y="20" textLength="100px">see the</text>
+              <text text-anchor="start" x="420" y="20" textLength="180px">parade last</text>
+              <text text-anchor="start" x="610" y="20" textLength="150px">weekend?</text>
+            </svg>
+            <br><br>
+          </div>
+          
         </div>
-      <br><br>
-      <div class="chart en-us-3">
-        <svg></svg>
+        <div class="col-xs-2">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-3">
+
+          </div>
+        </div>
       </div>
     </div>
 
+    <div class="tab-pane fade" id="ex4">
+      <br>
+      <div class="row">
+        <div class="col-xs-10">
+          <p>"Should I call them, or send an email?"</p>
+          <button type="button" class="btn btn-primary play en-us-4">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-4">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-4">Play Back</button>
+          <button type="button" class="btn btn-default analyze en-us-4">Save & Compare</button>
+            <div class="loading en-us-4" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-4">
+            <svg></svg>
+          </div>
+          <div class="transcript">
+            <svg>
+              <text text-anchor="start" x="180" y="20" textLength="110px">Should I</text>
+              <text text-anchor="start" x="300" y="20" textLength="130px">call them,</text>
+              <text text-anchor="start" x="440" y="20" textLength="140px">or send an</text>
+              <text text-anchor="start" x="590" y="20" textLength="120px">email?</text>
+            </svg>
+            <br><br>
+          </div>
+          
+        </div>
+        <div class="col-xs-2">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-4">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="tab-pane fade" id="ex5">
+      <br>
+      <div class="row">
+        <div class="col-xs-10">
+          <p>"You live down the street, don't you?"</p>
+          <button type="button" class="btn btn-primary play en-us-5">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-5">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-5">Play Back</button>
+          <button type="button" class="btn btn-default analyze en-us-5">Save & Compare</button>
+            <div class="loading en-us-5" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-5">
+            <svg></svg>
+          </div>
+          <div class="transcript">
+            <svg>
+              <text text-anchor="start" x="240" y="20" textLength="90px">You live</text>
+              <text text-anchor="start" x="335" y="20" textLength="95px">down the</text>
+              <text text-anchor="start" x="440" y="20" textLength="130px">street,</text>
+              <text text-anchor="start" x="580" y="20" textLength="140px">don't you?</text>
+            </svg>
+            <br><br>
+          </div>
+          
+        </div>
+        <div class="col-xs-2">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-5">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="tab-pane fade" id="ex6">
+      <br>
+      <div class="row">
+        <div class="col-xs-10">
+          <p>"You live down the street, don't you."</p>
+          <button type="button" class="btn btn-primary play en-us-6">Play</button>
+          <br><br>
+          <p>Try to repeat with the same intonation:</p>
+          <button type="button" class="btn btn-danger record en-us-6">Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-6">Play Back</button>
+          <button type="button" class="btn btn-default analyze en-us-6">Save & Compare</button>
+            <div class="loading en-us-6" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+            </div>
+          <br><br>
+          <div class="chart en-us-6">
+            <svg></svg>
+          </div>
+          <div class="transcript">
+            <svg>
+              <text text-anchor="start" x="260" y="20" textLength="90px">You live</text>
+              <text text-anchor="start" x="355" y="20" textLength="95px">down the</text>
+              <text text-anchor="start" x="470" y="20" textLength="130px">street,</text>
+              <text text-anchor="start" x="610" y="20" textLength="150px">don't you.</text>
+            </svg>
+            <br><br>
+          </div>
+          
+        </div>
+        <div class="col-xs-2">
+          <h4>Your Attempts</h4>
+          <div class="attempts en-us-6">
+
+          </div>
+        </div>
+      </div>
+    </div>
 
 
   </div>
@@ -153,11 +312,31 @@ $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) 
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
   exID = 'en-us-3';
-  recLength = 3.0;
+  recLength = 2.0;
   $('.chart.'+exID).hide();
   loadTab(exID, recLength);
 });
 
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex4"]', function (e) {
+  exID = 'en-us-4';
+  recLength = 2.5;
+  $('.chart.'+exID).hide();
+  loadTab(exID, recLength);
+});
+
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex5"]', function (e) {
+  exID = 'en-us-5';
+  recLength = 2.2;
+  $('.chart.'+exID).hide();
+  loadTab(exID, recLength);
+});
+
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex6"]', function (e) {
+  exID = 'en-us-6';
+  recLength = 2.2;
+  $('.chart.'+exID).hide();
+  loadTab(exID, recLength);
+});
 
 </script>
 
