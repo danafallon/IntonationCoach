@@ -33,11 +33,18 @@ def about():
 	return render_template("about.html")
 
 
+@app.route('/guidelines')
+def guidelines():
+	"""Show guidelines page."""
+
+	return render_template("guidelines.html")
+
 @app.route('/french')
 def french_content():
 	"""Display explanation text and sample sentences, with play buttons for sample recordings."""
 
 	return render_template("french.html")
+
 
 @app.route('/english-us')
 def english_content():
@@ -50,7 +57,20 @@ def english_content():
 def russian_content():
 	"""Display Russian page."""
 
-	return render_template('russian.html')
+	target_pitch_data = format_pitch_data(praat_analyze_pitch(path.abspath("./static/sounds/en-us-1.wav")))
+
+	target_json = jsonify(target_pitch_data=target_pitch_data)
+	return render_template('russian.html', target_json=target_json)
+
+# temporary - for experimentation purposes
+@app.route('/test-graph', methods=["POST"])
+def send_test_graph_data():
+	"""Temporary - sending pitch data to russian template to experiment with graph smoothing w/o caching issues."""
+
+	target_pitch_data = format_pitch_data(praat_analyze_pitch(path.abspath("./static/sounds/en-us-1.wav")))
+
+	return jsonify(target=target_pitch_data)
+
 
 
 @app.route('/<path:path>')

@@ -6,8 +6,8 @@
 }
 
 .transcript svg {
-    height: 100px;
-    width: 900px;
+  height: 100px;
+  width: 900px;
 }
 
 .nvd3 g.nv-groups path.nv-line {
@@ -15,34 +15,34 @@
 }
 
 svg text {
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 1;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1;
 }
 
 
 /* bootstrap hack: fix content width inside hidden tabs */
 .tab-content > .tab-pane,
 .pill-content > .pill-pane {
-    display: block;     /* undo display:none          */
-    height: 0;          /* height:0 is also invisible */ 
-    overflow-y: hidden; /* no-overflow                */
+  display: block;     /* undo display:none          */
+  height: 0;          /* height:0 is also invisible */ 
+  overflow-y: hidden; /* no-overflow                */
 }
 .tab-content > .active,
 .pill-content > .active {
-    height: auto;       /* let the content decide it  */
+  height: auto;       /* let the content decide it  */
 } /* bootstrap hack end */
 
 
 
-p {
-    font-size: 16px;
+p, li {
+  font-size: 16px;
 }
 
 blockquote > p {
-    color: #4b4b4b;
-    font-weight: 500;
-    display: inline-block;
+  color: #4b4b4b;
+  font-weight: 500;
+  display: inline-block;
 }
 
 
@@ -58,22 +58,26 @@ blockquote > p {
 }
 
 .navbar-nav > li > a {
-    font-size: 16px;
-    margin-top: 6px;
+  font-size: 16px;
+  margin-top: 6px;
 }
 
 .jumbotron {
-    background-color: ;
+  background-color: ;
 }
 
+/*
 .jumbotron .dropdown-menu { 
 /*    position: relative;
-*/    left: auto; 
-    top: inherit;
-    float: none;
+*/  margin: 0 auto; 
+  top: inherit;
+  float: none;
 }
 
-
+.jumbotron .dropdown {
+  text-align: center;
+}
+*/
 
 
 

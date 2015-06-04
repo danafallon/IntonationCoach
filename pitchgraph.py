@@ -18,13 +18,14 @@ def praat_analyze_pitch(audio_file):
 
 def format_pitch_data(pd):
 	"""Clean up the dictionary returned by praatinterface, put it in the format
-	needed for graphing, and return it as JSON."""
+	needed for graphing, smooth data by reducing number of datapoints, and return it as JSON."""
 
 	for t in pd.keys():
 		pd[t] = pd[t]['Pitch'] 	  # make each value just the pitch, instead of a sub-dict
 		if pd[t] == 0:
 			del pd[t]		  # if pitch is 0, remove from dictionary
 
+	# now, pd is dict where each key is time (x value) and each value is pitch (y value)
 	# to format for graph input, make list of dicts containing x-y pairs
 	datapoints_list = []
 	for t in pd.keys():
@@ -36,7 +37,20 @@ def format_pitch_data(pd):
 	# sort the list by the value of "x"
 	datapoints_sorted = sorted(datapoints_list, key=itemgetter("x"))
 
-	return json.dumps(datapoints_sorted, sort_keys=True)
+	# with this sorted list, do some data smoothing
+	# pull out every nth item
+	i = 0
+	datapoints_keep = []
+	while i < len(datapoints_sorted):
+		datapoints_keep.append(datapoints_sorted[i])
+		i += 50
+	# make sure last item is included so length of curve isn't lost
+	datapoints_keep.append(datapoints_sorted[-1])
+
+	# print "num of datapoints:", len(datapoints_keep)
+	# print datapoints_keep[:100]
+
+	return json.dumps(datapoints_keep, sort_keys=True)
 
 
 if __name__ == "__main__":
