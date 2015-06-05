@@ -13,7 +13,7 @@ from pitchgraph import praat_analyze_pitch, format_pitch_data
 
 app = Flask(__name__)
 
-app.secret_key = 'this-should-be-something-unguessable'
+app.secret_key = 'development key'
 
 app.jinja_env.undefined = jinja2.StrictUndefined
 
@@ -61,16 +61,6 @@ def russian_content():
 
 	target_json = jsonify(target_pitch_data=target_pitch_data)
 	return render_template('russian.html', target_json=target_json)
-
-# temporary - for experimentation purposes
-@app.route('/test-graph', methods=["POST"])
-def send_test_graph_data():
-	"""Temporary - sending pitch data to russian template to experiment with graph smoothing w/o caching issues."""
-
-	target_pitch_data = format_pitch_data(praat_analyze_pitch(path.abspath("./static/sounds/en-us-1.wav")))
-
-	return jsonify(target=target_pitch_data)
-
 
 
 @app.route('/<path:path>')
@@ -154,13 +144,6 @@ def delete_attempt():
 	current_url = redirect_url()
 	return redirect(current_url)
 
-
-@app.after_request
-def add_header(response):
-    """Add header to cache the rendered page for 10 minutes."""
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response.headers['Pragma']= 'no-cache'
-    return response
 
 
 
