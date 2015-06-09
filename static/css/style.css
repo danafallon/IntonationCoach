@@ -116,11 +116,21 @@ blockquote > p {
   float: none;
 }
 
-/*.jumbotron .dropdown {
-  text-align: center;
-}
-*/
 
+/* footer stuff */
+
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    margin: 0 auto -60px; /* the bottom margin is the negative value of the footer's height */
+    padding: 0 0 60px;
+}
+.footer {
+    height: 60px;
+}
 
 
 

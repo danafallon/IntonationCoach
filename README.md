@@ -9,25 +9,31 @@ Backend: Python, Flask, SQLAlchemy, SQLite
 Frontend: Javascript, jQuery, AJAX, HTML, CSS, Bootstrap, SVG  
 APIs & Libraries: Web Audio API, [Recorder.js](https://github.com/mattdiamond/Recorderjs), Praat, [python-praat-scripts](https://github.com/mmcauliffe/python-praat-scripts), NVD3, D3
 
-![image](static/img/screenshot-landing.png)
-
-![image](static/img/screenshot-fr-overview.png)
-
-![image](static/img/screenshot-target-only.png)
-
 ![image](static/img/screenshot-multiple-contours.png)
 
 ##Using Intonation Coach
 
+From the landing page, choose the language you want to practice. 
+
+![image](static/img/screenshot-landing.png)
+
+Read the overview tab and listen to each sample recording to learn about the intonation patterns you'll be practicing.
+
+![image](static/img/screenshot-fr-overview.png)
+
 ####Recording & Analyzing
 
-After reading the overview of intonation patterns in your chosen language, click on a tab containing a sample sentence and listen to the example again there, observing the shape of the pitch contour in the graph as it plays. Whenever you're ready, hit "Record" and say the sentence out loud, trying to follow the same intonation pattern as the example. In order to get the most helpful results, try to speak at the same pace as the sample recording and use the moving bar as a guideline of which word you should be on.
+After reading the overview, click on a tab containing a sample sentence and listen to the example again there, observing the shape of the pitch contour in the graph as it plays. Whenever you're ready, hit "Record" and say the sentence out loud, trying to follow the same intonation pattern as the example. In order to get the most helpful results, try to speak at the same pace as the sample recording and use the moving bar as a guideline of which word you should be on.
+
+![image](static/img/screenshot-target-only.png)
 
 After you've recorded, you can use the Play Back button to hear your recording, or you can go straight to the Save & Compare button to submit your attempt. Intonation Coach will then analyze your recording and add its pitch contour to the graph, where you can see how it compares to the target intonation.
 
 You can continue to record and submit attempts as many times as you want; all pitch contours will be displayed simultaneously, and each recording will be catalogued on the right side of the page with a Play button and a Delete button. You can hide a recording from the graph by clicking on its name in the legend at the top right corner of the graph; if you want to discard a recording completely, press the Delete button for it on the right side of the page, and it will be erased and removed from the graph.
 
-##Evaluating Your Intonation
+![image](static/img/screenshot-fr-multiple.png)
+
+####Evaluating Your Intonation
 
 Since intonation is not an exact science and there's a lot of room for minor variations, Intonation Coach doesn't try to give you a quantitative score of how you did. Instead, it encourages you to self-evaluate by comparing the pitch contours on the graph. Generally, you want to aim for your pitch contour to have a similar overall shape to the target pitch contour, especially at the end of the sentence.
 
