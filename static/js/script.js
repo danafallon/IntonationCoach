@@ -240,11 +240,12 @@ function loadTab(exID, recLength) {
     ];
     buildGraph(recLength);
     $('.chart').show();
-    // empty out .attempts div before populating it with buttons
+    // empty out .attempts div and then populate it with buttons
     $('.attempts').empty();
     for (i = 0; i < attempts.length; i++) {
       addAttemptPlayBtn(attempts[i]['attempt_num'], attempts[i]['rec_id'], attempts[i]['audio_data']);
     };
+    // $('.attempts').show();
     // if there are attempts saved, add their pitch data to the graph
     if (attempts.length > 0) {
       for (i = 0; i < attempts.length; i++) {
@@ -259,25 +260,29 @@ function loadTab(exID, recLength) {
 
 // add a play button for each recording the user has already made for this sentence
 function addAttemptPlayBtn(attemptNum, recID, attemptDataUrl) {
-  newPlayBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum+' '+recID)
-    .html('<span class="glyphicon glyphicon-play"></span>')
+  newPlayBtn = $('<button>').attr('class', 'btn btn-primary play-attempt '+attemptNum+' '+recID+' btn-sm')
+    .html('<span class="glyphicon glyphicon-play"></span> Play')
     .on('click', function (evt) {
       var attemptBlob = dataURItoBlob("data:audio/wav;base64,"+attemptDataUrl);
       var attemptObjUrl = (window.URL || window.webkitURL).createObjectURL(attemptBlob);
       loadFile(attemptObjUrl);
       animatePlaybar(recLength);
     });
-  newDelBtn = $('<button>').attr('class', 'btn btn-danger del-attempt '+attemptNum +' '+recID)
-    .html('Delete')
+  newDelBtn = $('<button>').attr('class', 'btn btn-danger del-attempt '+attemptNum +' '+recID+' btn-sm')
+    .html('<span class="glyphicon glyphicon-remove"></span> Delete')
     .on('click', function (evt) {
       recID = $(this).attr("class").split(' ')[4];
       $.post('/delete-attempt', { rec_id: recID }, function () {
         loadTab(exID, recLength);
       });
     });
-  $('.attempts').append('#'+attemptNum+' ', newPlayBtn, ' ', newDelBtn, '<br><br>');
+  $('.attempts').append('<b>#'+attemptNum+'</b> ', newPlayBtn, ' ', newDelBtn, '<br><br>');
 }
 
+function switchTabs(exID, recLength) {
+  $('.chart.'+exID).hide();
+  loadTab(exID, recLength);
+}
 
 
 // when page loads:

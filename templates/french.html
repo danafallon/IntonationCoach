@@ -8,11 +8,11 @@
 
   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-    <li role="presentation"><a href="#ex1" data-toggle="tab">#1: Declarative</a></li>
-    <li role="presentation"><a href="#ex2" data-toggle="tab">#2: Imperative</a></li>
-    <li role="presentation"><a href="#ex3" data-toggle="tab">#3: Yes/No Interrogative</a></li>
-    <li role="presentation"><a href="#ex4" data-toggle="tab">#4: Information Interrogative</a></li>
-    <li role="presentation"><a href="#ex5" data-toggle="tab">#5: Exclamatory</a></li>
+    <li role="presentation"><a href="#ex1" data-toggle="tab">Declarative</a></li>
+    <li role="presentation"><a href="#ex2" data-toggle="tab">Imperative</a></li>
+    <li role="presentation"><a href="#ex3" data-toggle="tab">Yes/No Interrogative</a></li>
+    <li role="presentation"><a href="#ex4" data-toggle="tab">Information Interrogative</a></li>
+    <li role="presentation"><a href="#ex5" data-toggle="tab">Exclamatory</a></li>
   </ul>
 
   <div id="my-tab-content" class="tab-content">
@@ -251,36 +251,31 @@
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
   exID = 'fr-1';
   recLength = 3.0;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
   exID = 'fr-2';
   recLength = 2.3;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
   exID = 'fr-3';
   recLength = 2.5;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex4"]', function (e) {
   exID = 'fr-4';
   recLength = 1.6;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex5"]', function (e) {
   exID = 'fr-5';
   recLength = 2.3;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 </script>

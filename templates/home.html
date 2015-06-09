@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block body %}
 
+<link href="../static/css/landing-page.css" rel="stylesheet">
+
 <div class="container-fluid">
-	<div class="jumbotron">
+	<br>
+	<!-- <div class="jumbotron"> -->
 		<h1 class="text-center">Intonation Coach</h1>
 		<br>
-		<p class="text-center">A tool for language learners</p>
-		<br>
+		<h3 class="text-center">A tool for language learners</h3>
+		<br><br>
 
 		<div class="row">
 			<div class="col-xs-3 col-xs-offset-5">
@@ -16,20 +19,23 @@
 				    <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu" aria-labelledby="language-dropdown">
-				  	<li role="presentation"><a role="menuitem" tabindex="-1" href="/english-us">English (US)</a></li>
 				    <li role="presentation"><a role="menuitem" tabindex="-1" href="/french">French</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="/english-us">English (US)</a></li>
 				    <li role="presentation"><a role="menuitem" tabindex="-1" href="/russian">Russian</a></li>
 				  </ul>
 				</div>
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 
+<!-- 	<br><br>
 	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1">
-			<p>Intonation, the variation in pitch in spoken language, is an important part of communication but is often one of the last pieces to be mastered in the process of learning a new language. Intonation Coach is a tool designed to help you practice and refine your intonation in the language you're learning.</p>
+		<div class="col-xs-10 col-xs-offset-1 panel panel-default">
+			<div class="panel-body">
+				<p>Intonation, the variation in pitch in spoken language, is an important part of communication but is often one of the last pieces to be mastered in the process of learning a new language. Intonation Coach is a tool designed to help you practice and refine your intonation in the language you're learning.</p>
+			</div>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 

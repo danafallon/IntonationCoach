@@ -6,7 +6,7 @@
 }
 
 .transcript svg {
-  height: 100px;
+  height: 50px;
   width: 900px;
 }
 
@@ -34,6 +34,26 @@ svg text {
 } /* bootstrap hack end */
 
 
+body {
+  background-image: url("../img/green-waves-shifted2-clipped.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.tab-pane h4 {
+  display: inline-block;
+}
+
+/*.lang-title {
+  color: white;
+}*/
+
+
+.panel {
+  background-color: rgba(255,255,255,0.9);
+}
+
 
 p, li {
   font-size: 16px;
@@ -48,6 +68,7 @@ blockquote > p {
 
 .navbar {
   min-height: 60px;
+  margin-bottom: 0;
 }
 
 .navbar-brand {
@@ -62,19 +83,19 @@ blockquote > p {
   margin-top: 6px;
 }
 
+
 .jumbotron {
-  background-color: ;
+  background-color: rgba(255,255,255,0.75);
 }
 
-/*
+
 .jumbotron .dropdown-menu { 
-/*    position: relative;
-*/  margin: 0 auto; 
+  margin: 0 auto; 
   top: inherit;
   float: none;
 }
 
-.jumbotron .dropdown {
+/*.jumbotron .dropdown {
   text-align: center;
 }
 */

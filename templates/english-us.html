@@ -2,17 +2,21 @@
 {% block body %}
 
 <div class="container-fluid">
-	<h1>English (US)</h1>
+	
+  <h1 class="lang-title">English (US)</h1>
 	<br>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
 
   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-    <li role="presentation"><a href="#ex1" data-toggle="tab">#1: Declarative</a></li>
-    <li role="presentation"><a href="#ex2" data-toggle="tab">#2: Imperative</a></li>
-    <li role="presentation"><a href="#ex3" data-toggle="tab">#3: Interrogative</a></li>
-    <li role="presentation"><a href="#ex4" data-toggle="tab">#4: Alternative Interrogative</a></li>
-    <li role="presentation"><a href="#ex5" data-toggle="tab">#5: Tag Question</a></li>
-    <li role="presentation"><a href="#ex6" data-toggle="tab">#6: Rhetorical Tag Question</a></li>
+    <li role="presentation"><a href="#ex1" data-toggle="tab">Declarative</a></li>
+    <li role="presentation"><a href="#ex2" data-toggle="tab">Imperative</a></li>
+    <li role="presentation"><a href="#ex3" data-toggle="tab">Interrogative</a></li>
+    <li role="presentation"><a href="#ex4" data-toggle="tab">Alternative Interrogative</a></li>
+    <li role="presentation"><a href="#ex5" data-toggle="tab">Tag Question</a></li>
+    <li role="presentation"><a href="#ex6" data-toggle="tab">Rhetorical Tag Question</a></li>
   </ul>
 
   <div id="my-tab-content" class="tab-content">
@@ -58,11 +62,11 @@
       <div class="row">
         <div class="col-xs-10">
           <p>“Yesterday, I went to the store and bought groceries.”</p>
-          <button type="button" class="btn btn-primary play en-us-1">Play</button>
+          <button type="button" class="btn btn-primary play en-us-1"><span class="glyphicon glyphicon-play"></span> Play</button> 
           <br><br>
           <p>Try to repeat with the same intonation:</p>
-          <button type="button" class="btn btn-danger record en-us-1">Record</button>
-          <button type="button" class="btn btn-primary play-back en-us-1">Play Back</button>
+          <button type="button" class="btn btn-danger record en-us-1"><span class="glyphicon glyphicon-record"></span> Record</button>
+          <button type="button" class="btn btn-primary play-back en-us-1"><span class="glyphicon glyphicon-play"></span> Play Back</button>
           <button type="button" class="btn btn-default analyze en-us-1">Save & Compare</button>
             <div class="loading en-us-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
             </div>
@@ -80,8 +84,7 @@
               <text text-anchor="start" x="560" y="20" textLength="70px">bought</text>
               <text text-anchor="start" x="640" y="20" textLength="110px">groceries.</text>
             </svg>
-
-            <br><br>
+          <!-- </div> -->
           </div>
         </div>
         <div class="col-xs-2">
@@ -280,13 +283,17 @@
 
           </div>
         </div>
-      </div>
-    </div>
+      </div>    <!-- closes row -->
+
+    </div>    <!-- closes last tab -->
+
+  </div>  <!-- closes tab-content -->
 
 
+    </div>  <!-- close panel -->
   </div>
 
-</div>
+</div>    <!-- closes main container-fluid -->
 
 <!-- My external Javascript-->
 <script src="../static/js/script.js"></script>
@@ -299,43 +306,37 @@
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
   exID = 'en-us-1';
   recLength = 3.0;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
   exID = 'en-us-2';
   recLength = 2.5;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
   exID = 'en-us-3';
   recLength = 2.0;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex4"]', function (e) {
   exID = 'en-us-4';
   recLength = 2.5;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex5"]', function (e) {
   exID = 'en-us-5';
   recLength = 2.2;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 $(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex6"]', function (e) {
   exID = 'en-us-6';
   recLength = 2.2;
-  $('.chart.'+exID).hide();
-  loadTab(exID, recLength);
+  switchTabs(exID, recLength);
 });
 
 </script>
