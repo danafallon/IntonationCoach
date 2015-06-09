@@ -35,10 +35,30 @@ svg text {
 
 
 body {
-  background-image: url("../img/green-waves-shifted2-clipped.jpg");
+  background-image: url("../img/background.png");
   background-size: 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+h1 {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 3.3em;
+}
+
+h2 {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 2.3em;
+}
+
+h3 {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 2em;
+}
+
+h1.landing {
+  font-size: 5em;
 }
 
 .tab-pane h4 {
@@ -51,12 +71,13 @@ body {
 
 
 .panel {
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,0.8);
 }
 
 
 p, li {
   font-size: 16px;
+  font-family: 'Noto Sans', sans-serif;
 }
 
 blockquote > p {
@@ -80,7 +101,7 @@ blockquote > p {
 
 .navbar-nav > li > a {
   font-size: 16px;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 

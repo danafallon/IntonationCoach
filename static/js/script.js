@@ -62,7 +62,7 @@ function myCallback(blob) {
 
 // change buttons & trigger animation when user clicks record button
 function handleRecord(exID, recLength) {
-  if ($('.record.'+exID).html() == "Record") {
+  if ($('.record.'+exID).html() == '<span class="glyphicon glyphicon-record"></span> Record') {
     startRecord(exID, recLength);
     setTimeout(function () { 
       stopRecord(exID); 
@@ -76,14 +76,14 @@ function handleRecord(exID, recLength) {
 function startRecord(exID, recLength) {
   recorder.clear();
   recorder.record();
-  $('.record.'+exID).html("Stop");
+  $('.record.'+exID).html('<span class="glyphicon glyphicon-stop"></span> Stop');
   animatePlaybar(recLength);
 }
 
 function stopRecord(exID) {
   recorder.stop();
   recorder.exportWAV(myCallback);
-  $('.record.'+exID).html("Record");
+  $('.record.'+exID).html('<span class="glyphicon glyphicon-record"></span> Record');
   $('.analyze.'+exID).removeAttr('disabled');
   $('.play-back.'+exID).removeAttr('disabled');
 }
@@ -164,7 +164,7 @@ function buildGraph(recLength) {
 function updateGraph(userPitchData, attemptNum) {
   chartData.push({
     values: userPitchData,
-    key: 'Attempt #'+attemptNum
+    key: 'Recording #'+attemptNum
   })
   
   d3.select('.chart.'+exID+' svg')
@@ -251,7 +251,7 @@ function loadTab(exID, recLength) {
       for (i = 0; i < attempts.length; i++) {
         chartData.push({
           values: JSON.parse(attempts[i]['pitch_data']),
-          key: 'Attempt #'+attempts[i]['attempt_num']
+          key: 'Recording #'+attempts[i]['attempt_num']
         });
       }
     }
