@@ -78,15 +78,13 @@ def send_target_pitch_data():
 	target_filepath = "./static/json/" + ex_id + "-pd.json"
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
-	target_pitch_data = json.dumps(target_json, sort_keys=True)
-	# print type(target_pitch_data)			# target_pitch_data is type str
+	target_pitch_data = json.dumps(target_json, sort_keys=True)		# target_pitch_data is a str
 	target_file.close()
 
 	attempts = Recording.query.filter_by(ex_id=ex_id).all()
 	if not attempts:
 		attempts = []
-	attempts_serialized = [attempt.serialize() for attempt in attempts]
-	# print type(attempts_serialized)		# attempts_serialized is type list
+	attempts_serialized = [attempt.serialize() for attempt in attempts]		# attempts_serialized is a list
 
 	return jsonify(target=target_pitch_data, attempts=attempts_serialized)
 
@@ -97,8 +95,6 @@ def analyze_user_rec():
 
 	# analyze user's recording:
 	user_b64 = request.form.get("user_rec")[22:]		# cut off first 22 chars ("data:audio/wav;base64,")
-	# print type(user_b64)
-	# print len(user_b64)
 
 	user_wav = base64.b64decode(user_b64)
 	f = open('./static/sounds/user-rec.wav', 'wb')
@@ -107,8 +103,6 @@ def analyze_user_rec():
 	user_rec_filepath = path.abspath('./static/sounds/user-rec.wav')
 
 	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
-	# print type(user_pitch_data)
-	# print len(user_pitch_data)
 
 	# store audio data (user_b64) and user_pitch_data in db
 	ex_id = request.form.get("ex_id")

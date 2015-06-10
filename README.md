@@ -7,7 +7,7 @@ This app was built in 4.5 weeks during the Spring 2015 cohort of Hackbright Acad
 ####Technology Stack
 Backend: Python, Flask, SQLAlchemy, SQLite  
 Frontend: Javascript, jQuery, AJAX, HTML, CSS, Bootstrap, SVG  
-APIs & Libraries: Web Audio API, [Recorder.js](https://github.com/mattdiamond/Recorderjs), Praat, [python-praat-scripts](https://github.com/mmcauliffe/python-praat-scripts), NVD3, D3
+APIs & Libraries: Web Audio API, [Recorder.js](https://github.com/mattdiamond/Recorderjs), Praat, [python-praat-scripts](https://github.com/mmcauliffe/python-praat-scripts), [NVD3](http://nvd3.org/), D3
 
 ![image](static/img/screenshot-multiple-contours.png)
 

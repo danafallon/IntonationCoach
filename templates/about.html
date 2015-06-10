@@ -8,7 +8,23 @@
 				<div class="panel-body">
 					<h1>About Intonation Coach</h1>
 					<br>
-					<p>This app was built in 4.5 weeks by Dana Fallon, a Hackbright Academy Software Engineering Fellow, as her final project for the fellowship.</p>
+					<p>This app was built in 4.5 weeks as a final project for Hackbright Academy's Software Engineering Fellowship.</p> 
+
+					<h3>Technology Stack</h3>
+					<p>Intonation Coach has a Python backend running on a Flask server, with an SQLite database and SQLAlchemy. The frontend is written in Javascript with jQuery and AJAX, and HTML/CSS with Bootstrap.</p> 
+					<p>Pitch analysis is done with Michael McAuliffe's <a href="https://github.com/mmcauliffe/python-praat-scripts">python-praat-scripts</a> package, which harnesses the pitch detection algorithm of the phonetic analysis program <a href="http://www.fon.hum.uva.nl/praat/">Praat</a>. The pitch data extracted from this process is then smoothed, formatted, serialized as JSON, and passed back to the frontend to be displayed in the graph.</p>
+					<p>Graphs are created with <a href="http://nvd3.org/">NVD3</a>, with additional animation using <a href="http://d3js.org/">D3</a>. Transcripts below each graph are aligned with SVG.<p>
+					<p>Audio is captured from the browser with the help of Matt Diamond's <a href="https://github.com/mattdiamond/Recorderjs">Recorder.js</a> and played through the Web Audio API. User recordings are encoded as data URLs and passed to the server, where they are decoded using base-64 decoding and written to WAV files to be fed into the pitch analysis module. Audio and pitch data for each user recording are also saved to the database; on each tab load, the relevant recordings for that sentence are fetched from the database. Their pitch data is added to the graph while audio data is given an object URL and loaded into a buffer to be played.</p>
+
+					<h3>Additional Resources</h3>
+					<p>Information about languages and intonation has been compiled with help from the following:
+						<ul>
+							<li><a href="https://www.laits.utexas.edu/fi/html/pho/03.html">Français interactif</a></li>
+							<li><a href="http://www.ucl.ac.uk/internet-grammar/clauses/decl.htm">Internet Grammar of English</a></li>
+							<li><a href="http://usefulenglish.ru/phonetics/falling-intonation">Useful English</a></li>
+						</ul>
+
+					<p>The example sentences were recorded for this project by Alex Martin (French) and Dana Fallon (English).</p>
 				</div>
 			</div>
 		</div>
