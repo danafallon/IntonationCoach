@@ -8,7 +8,7 @@ import base64
 from os import path
 
 from model import Recording, connect_to_db, db
-from pitchgraph import praat_analyze_pitch, format_pitch_data
+from pitchgraph import analyze_pitch
 
 
 app = Flask(__name__)
@@ -57,10 +57,7 @@ def english_content():
 def russian_content():
 	"""Display Russian page."""
 
-	target_pitch_data = format_pitch_data(praat_analyze_pitch(path.abspath("./static/sounds/en-us-1.wav")))
-
-	target_json = jsonify(target_pitch_data=target_pitch_data)
-	return render_template('russian.html', target_json=target_json)
+	return render_template('russian.html')
 
 
 @app.route('/<path:path>')
@@ -72,13 +69,14 @@ def send_audio_file(path):
 
 @app.route('/targetdata', methods=["POST"])
 def send_target_pitch_data():
-	"""Sends pitch data from target recording to be displayed in graph when tab loads. Also sends the user's past attempts at this sentence, if any."""
+	"""Send pitch data from target recording to be displayed in graph when tab loads. 
+	Also send the user's past attempts at this sentence, if any."""
 
 	ex_id = request.form.get("sentence")
 	target_filepath = "./static/json/" + ex_id + "-pd.json"
 	target_file = open(target_filepath)
 	target_json = json.loads(target_file.read())
-	target_pitch_data = json.dumps(target_json, sort_keys=True)		# target_pitch_data is a str
+	target_pitch_data = json.dumps(target_json, sort_keys=True)				# target_pitch_data is a str
 	target_file.close()
 
 	attempts = Recording.query.filter_by(ex_id=ex_id).all()
@@ -94,7 +92,7 @@ def analyze_user_rec():
 	"""Analyze the user's recording, save the audio data and pitch data to database, and send pitch data back to page."""
 
 	# analyze user's recording:
-	user_b64 = request.form.get("user_rec")[22:]		# cut off first 22 chars ("data:audio/wav;base64,")
+	user_b64 = request.form.get("user_rec")[22:]			# cut off first 22 chars ("data:audio/wav;base64,")
 
 	user_wav = base64.b64decode(user_b64)
 	f = open('./static/sounds/user-rec.wav', 'wb')
@@ -102,15 +100,13 @@ def analyze_user_rec():
 	f.close()
 	user_rec_filepath = path.abspath('./static/sounds/user-rec.wav')
 
-	user_pitch_data = format_pitch_data(praat_analyze_pitch(user_rec_filepath))
+	user_pitch_data = analyze_pitch(user_rec_filepath)
 
 	# store audio data (user_b64) and user_pitch_data in db
 	ex_id = request.form.get("ex_id")
-	attempts = Recording.query.filter_by(ex_id=ex_id).all()		# list of recording objects
+	attempts = Recording.query.filter_by(ex_id=ex_id).all()				# list of recording objects
 	if attempts:
-		attempt_nums = []
-		for attempt in attempts:
-			attempt_nums.append(attempt.attempt_num)
+		attempt_nums = [ attempt.attempt_num for attempt in attempts ]
 		next_attempt_num = 1 + max(attempt_nums)
 	else:
 		next_attempt_num = 1

@@ -21,15 +21,41 @@ class ServerTestCase(unittest.TestCase):
 		os.unlink(server.app.config['DATABASE'])
 
 	def test_renders_english_template(self):
-		res = self.app.get('/')
+		"""Does the English page load from the expected route?"""
+		
+		res = self.app.get('/english-us')
 		self.assertIn('English (US)', res.data)
+		self.assertIn('Overview', res.data)
+		self.assertIn('Declarative', res.data)
 
-	# @unittest.skip('skip for now')
+	def test_renders_french_template(self):
+		"""Does the French page load at the expected route?"""
+		
+		res = self.app.get('/french')
+		self.assertIn('French', res.data)
+		self.assertIn('Overview', res.data)
+		self.assertIn('Declarative', res.data)
+
 	def test_send_audio_file(self):
+		"""Is an audio file successfully fetched from the static folder?"""
+		
 		res = self.app.get('/sounds/en-us-1.wav')
 		self.assertIs(res.status_code, 200)
+
+	@unittest.skip('')
+	def test_send_target_pitch_data(self):
+		"""Is target pitch data being sent to the page?"""
+		
+		res = self.app.post('/targetdata', data=dict(sentence='en-us-1'))		
+		self.assertIsNotNone(res.data)
 		
 
-
 if __name__ == "__main__":
-    unittest.main()
+	unittest.main()
+
+
+
+
+
+
+
