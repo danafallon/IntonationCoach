@@ -1,11 +1,8 @@
-"""Models and database functions for Intonation Coach project."""
-
 from flask_sqlalchemy import SQLAlchemy
+
 
 db = SQLAlchemy()
 
-#######################################################################################
-# Model definitions
 
 class Recording(db.Model):
 	"""User recording, containing both the audio data and the json pitch data."""
@@ -22,8 +19,6 @@ class Recording(db.Model):
 		return "<Recording rec_id=%s ex_id=%s attempt_num=%s>" % (self.rec_id, self.ex_id, self.attempt_num)
 
 	def serialize(self):
-		"""Return recording object in easily serializable format so that it can be jsonified."""
-
 		serialized = {
 			"rec_id": self.rec_id,
 			"ex_id": self.ex_id,
@@ -34,10 +29,6 @@ class Recording(db.Model):
 
 		return serialized
 
-
-
-#######################################################################################
-# Helper functions
 
 def connect_to_db(app):
 	"""Connect the database to the Flask app."""
