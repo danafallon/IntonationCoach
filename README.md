@@ -1,17 +1,17 @@
-#Intonation Coach
+# Intonation Coach
 
 Intonation, the variation in pitch in spoken language, is an important part of communication but is often one of the last pieces to be mastered in the process of learning a new language. Intonation Coach is a tool designed to help language learners practice and refine their intonation. A user can listen to an example sentence, record their attempt at repeating it, and then view a graphical comparison of pitch contours to see how their intonation measures up. By providing visual feedback and letting the user track their progress, this app helps language learners understand the melodies of language and improve the naturalness of their speech.
 
 This app was built in 4.5 weeks during the Spring 2015 cohort of Hackbright Academy's Software Engineering Fellowship.
 
-####Technology Stack
+#### Technology Stack
 Backend: Python, Flask, SQLAlchemy, SQLite  
 Frontend: Javascript, jQuery, AJAX, HTML, CSS, Bootstrap, SVG  
 APIs & Libraries: Web Audio API, [Recorder.js](https://github.com/mattdiamond/Recorderjs), Praat, [python-praat-scripts](https://github.com/mmcauliffe/python-praat-scripts), [NVD3](http://nvd3.org/), D3
 
 ![image](static/img/screenshot-multiple-contours.png)
 
-##Using Intonation Coach
+## Using Intonation Coach
 
 From the landing page, choose the language you want to practice. 
 
@@ -21,7 +21,7 @@ Read the overview tab and listen to each sample recording to learn about the int
 
 ![image](static/img/screenshot-fr-overview.png)
 
-####Recording & Analyzing
+#### Recording & Analyzing
 
 After reading the overview, click on a tab containing a sample sentence and listen to the example again there, observing the shape of the pitch contour in the graph as it plays. Whenever you're ready, hit "Record" and say the sentence out loud, trying to follow the same intonation pattern as the example. In order to get the most helpful results, try to speak at the same pace as the sample recording and use the moving bar as a guideline of which word you should be on.
 
@@ -33,11 +33,11 @@ You can continue to record and submit attempts as many times as you want; all pi
 
 ![image](static/img/screenshot-fr-multiple.png)
 
-####Evaluating Your Intonation
+#### Evaluating Your Intonation
 
 Since intonation is not an exact science and there's a lot of room for minor variations, Intonation Coach doesn't try to give you a quantitative score of how you did. Instead, it encourages you to self-evaluate by comparing the pitch contours on the graph. Generally, you want to aim for your pitch contour to have a similar overall shape to the target pitch contour, especially at the end of the sentence.
 
-##Running Intonation Coach on Your Machine
+## Running Intonation Coach on Your Machine
 
 Clone this repository: 
 
