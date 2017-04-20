@@ -11,12 +11,12 @@
 
       <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
         <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-        <li role="presentation"><a href="#ex1" data-toggle="tab">Declarative</a></li>
-        <li role="presentation"><a href="#ex2" data-toggle="tab">Imperative</a></li>
-        <li role="presentation"><a href="#ex3" data-toggle="tab">Interrogative</a></li>
-        <li role="presentation"><a href="#ex4" data-toggle="tab">Alternative Interrogative</a></li>
-        <li role="presentation"><a href="#ex5" data-toggle="tab">Tag Question</a></li>
-        <li role="presentation"><a href="#ex6" data-toggle="tab">Rhetorical Tag Question</a></li>
+        <li role="presentation"><a href="#en-us-1" data-toggle="tab">Declarative</a></li>
+        <li role="presentation"><a href="#en-us-2" data-toggle="tab">Imperative</a></li>
+        <li role="presentation"><a href="#en-us-3" data-toggle="tab">Interrogative</a></li>
+        <li role="presentation"><a href="#en-us-4" data-toggle="tab">Alternative Interrogative</a></li>
+        <li role="presentation"><a href="#en-us-5" data-toggle="tab">Tag Question</a></li>
+        <li role="presentation"><a href="#en-us-6" data-toggle="tab">Rhetorical Tag Question</a></li>
       </ul>
 
       <div id="my-tab-content" class="tab-content">
@@ -57,242 +57,81 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="ex1">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>“Yesterday, I went to the store and bought groceries.”</p>
-              <button type="button" class="btn btn-primary play en-us-1"><span class="glyphicon glyphicon-play"></span> Play</button> 
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-1"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-1"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-1">Save & Compare</button>
-                <div class="loading en-us-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-1">
-                <svg>
-                </svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="165" y="20" textLength="145px">Yesterday,</text>
-                  <text text-anchor="start" x="315" y="20" textLength="120px">I went to the</text>
-                  <text text-anchor="start" x="445" y="20" textLength="60px">store</text>
-                  <text text-anchor="start" x="520" y="20" textLength="35px">and</text>
-                  <text text-anchor="start" x="560" y="20" textLength="70px">bought</text>
-                  <text text-anchor="start" x="640" y="20" textLength="110px">groceries.</text>
-                </svg>
-              </div>
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-1">
+        {% with sentence_text = 'Yesterday, I went to the store and bought groceries.',
+                ex_id = 'en-us-1',
+                segments = [
+                  (165, 145, 'Yesterday,'),
+                  (315, 120, 'I went to the'),
+                  (445, 60, 'store'),
+                  (520, 35, 'and'),
+                  (560, 70, 'bought'),
+                  (640, 110, 'groceries.'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-              </div>
-            </div>
-          </div>
-        </div>
+        {% with sentence_text = 'Open the book and turn to page 70.',
+                ex_id = 'en-us-2',
+                segments = [
+                  (165, 100, 'Open the'),
+                  (280, 80, 'book'),
+                  (380, 130, 'and turn to'),
+                  (540, 90, 'page'),
+                  (650, 170, 'seventy.'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
+        {% with sentence_text = 'Did you see the parade last weekend?',
+                ex_id = 'en-us-3',
+                segments = [
+                  (200, 100, 'Did you'),
+                  (310, 100, 'see the'),
+                  (420, 180, 'parade last'),
+                  (610, 150, 'weekend?'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-        <div class="tab-pane fade" id="ex2">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Open the book and turn to page 70."</p>
-              <button type="button" class="btn btn-primary play en-us-2"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-2"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-2"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-2">Save & Compare</button>
-                <div class="loading en-us-2" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-2">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="165" y="20" textLength="100px">Open the</text>
-                  <text text-anchor="start" x="280" y="20" textLength="80px">book</text>
-                  <text text-anchor="start" x="380" y="20" textLength="130px">and turn to</text>
-                  <text text-anchor="start" x="540" y="20" textLength="90px">page</text>
-                  <text text-anchor="start" x="650" y="20" textLength="170px">seventy.</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-2">
+        {% with sentence_text = 'Should I call them, or send an email?',
+                ex_id = 'en-us-4',
+                segments = [
+                  (190, 110, 'Should I'),
+                  (310, 130, 'call them,'),
+                  (450, 140, 'or send an'),
+                  (600, 120, 'email?'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-              </div>
-            </div>
-          </div>
-        </div>
+        {% with sentence_text = "You live down the street, don't you?",
+                ex_id = 'en-us-5',
+                segments = [
+                  (240, 90, 'You live'),
+                  (335, 95, 'down the'),
+                  (440, 130, 'street,'),
+                  (580, 140, "don't you?"),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
+        {% with sentence_text = "You live down the street, don't you.",
+                ex_id = 'en-us-6',
+                segments = [
+                  (260, 90, 'You live'),
+                  (355, 100, 'down the'),
+                  (470, 130, 'street,'),
+                  (610, 150, "don't you."),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-        <div class="tab-pane fade" id="ex3">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Did you see the parade last weekend?"</p>
-              <button type="button" class="btn btn-primary play en-us-3"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-3"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-3"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-3">Save & Compare</button>
-                <div class="loading en-us-3" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-3">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="200" y="20" textLength="100px">Did you</text>
-                  <text text-anchor="start" x="310" y="20" textLength="100px">see the</text>
-                  <text text-anchor="start" x="420" y="20" textLength="180px">parade last</text>
-                  <text text-anchor="start" x="610" y="20" textLength="150px">weekend?</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-3">
+      </div>
 
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="ex4">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Should I call them, or send an email?"</p>
-              <button type="button" class="btn btn-primary play en-us-4"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-4"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-4"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-4">Save & Compare</button>
-                <div class="loading en-us-4" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-4">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="190" y="20" textLength="110px">Should I</text>
-                  <text text-anchor="start" x="310" y="20" textLength="130px">call them,</text>
-                  <text text-anchor="start" x="450" y="20" textLength="140px">or send an</text>
-                  <text text-anchor="start" x="600" y="20" textLength="120px">email?</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-4">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="tab-pane fade" id="ex5">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"You live down the street, don't you?"</p>
-              <button type="button" class="btn btn-primary play en-us-5"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-5"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-5"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-5">Save & Compare</button>
-                <div class="loading en-us-5" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-5">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="240" y="20" textLength="90px">You live</text>
-                  <text text-anchor="start" x="335" y="20" textLength="95px">down the</text>
-                  <text text-anchor="start" x="440" y="20" textLength="130px">street,</text>
-                  <text text-anchor="start" x="580" y="20" textLength="140px">don't you?</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-5">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="tab-pane fade" id="ex6">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"You live down the street, don't you."</p>
-              <button type="button" class="btn btn-primary play en-us-6"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record en-us-6"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back en-us-6"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze en-us-6">Save & Compare</button>
-                <div class="loading en-us-6" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart en-us-6">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="260" y="20" textLength="90px">You live</text>
-                  <text text-anchor="start" x="355" y="20" textLength="100px">down the</text>
-                  <text text-anchor="start" x="470" y="20" textLength="130px">street,</text>
-                  <text text-anchor="start" x="610" y="20" textLength="150px">don't you.</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts en-us-6">
-
-              </div>
-            </div>
-          </div>    <!-- closes row -->
-
-        </div>    <!-- closes last tab -->
-
-      </div>  <!-- closes tab-content -->
-
-
-    </div>  <!-- close panel -->
+    </div>
   </div>
 
-</div>    <!-- closes main container-fluid -->
+</div>
 
 <!-- My external Javascript-->
 <script src="../static/js/script.js"></script>
@@ -302,37 +141,37 @@
 
 // when user navigates to a tab, reassign global variables exID & recLength with values specific to that example sentence
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-1"]', function (e) {
   exID = 'en-us-1';
   recLength = 3.0;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-2"]', function (e) {
   exID = 'en-us-2';
   recLength = 2.5;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-3"]', function (e) {
   exID = 'en-us-3';
   recLength = 2.0;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex4"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-4"]', function (e) {
   exID = 'en-us-4';
   recLength = 2.5;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex5"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-5"]', function (e) {
   exID = 'en-us-5';
   recLength = 2.2;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex6"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#en-us-6"]', function (e) {
   exID = 'en-us-6';
   recLength = 2.2;
   switchTabs(exID, recLength);

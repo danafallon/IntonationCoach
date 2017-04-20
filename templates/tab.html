@@ -1,0 +1,38 @@
+{% block tab %}
+  <div class="tab-pane fade" id="{{ ex_id }}">
+    <br>
+    <div class="row">
+      <div class="col-xs-10">
+        <p>"{{ sentence_text }}"</p>
+        <button type="button" class="btn btn-primary play {{ ex_id }}"><span class="glyphicon glyphicon-play"></span> Play</button>
+        <br><br>
+        <p>Try to repeat with the same intonation:</p>
+        <button type="button" class="btn btn-danger record {{ ex_id }}"><span class="glyphicon glyphicon-record"></span> Record</button>
+        <button type="button" class="btn btn-primary play-back {{ ex_id }}"><span class="glyphicon glyphicon-play"></span> Play Back</button>
+        <button type="button" class="btn btn-default analyze {{ ex_id }}">Save & Compare</button>
+          <div class="loading {{ ex_id }}" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
+          </div>
+        <br><br>
+        <div class="chart {{ ex_id }}">
+          <svg>
+          </svg>
+        </div>
+        <div class="transcript">
+          <svg>
+            {% for x, length, text in segments %}
+              <text text-anchor="start" x="{{ x }}" y="20" textLength="{{ length }}">{{ text }}</text>
+            {% endfor %}
+          </svg>
+
+          <br><br>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <h4>Your Recordings</h4>
+        <div class="attempts {{ ex_id }}">
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
