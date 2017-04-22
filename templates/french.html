@@ -11,11 +11,11 @@
 
       <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
         <li role="presentation" class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
-        <li role="presentation"><a href="#ex1" data-toggle="tab">Declarative</a></li>
-        <li role="presentation"><a href="#ex2" data-toggle="tab">Imperative</a></li>
-        <li role="presentation"><a href="#ex3" data-toggle="tab">Yes/No Interrogative</a></li>
-        <li role="presentation"><a href="#ex4" data-toggle="tab">Information Interrogative</a></li>
-        <li role="presentation"><a href="#ex5" data-toggle="tab">Exclamatory</a></li>
+        <li role="presentation"><a href="#fr-1" data-toggle="tab">Declarative</a></li>
+        <li role="presentation"><a href="#fr-2" data-toggle="tab">Imperative</a></li>
+        <li role="presentation"><a href="#fr-3" data-toggle="tab">Yes/No Interrogative</a></li>
+        <li role="presentation"><a href="#fr-4" data-toggle="tab">Information Interrogative</a></li>
+        <li role="presentation"><a href="#fr-5" data-toggle="tab">Exclamatory</a></li>
       </ul>
 
       <div id="my-tab-content" class="tab-content">
@@ -54,193 +54,58 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="ex1">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>“Hier, je suis allé au supermarché.”</p>
-              <button type="button" class="btn btn-primary play fr-1"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record fr-1"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back fr-1"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze fr-1">Save & Compare</button>
-                <div class="loading fr-1" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart fr-1">
-                <svg>
-                </svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="210" y="20" textLength="160px">Hier,</text>
-                  <text text-anchor="start" x="460" y="20" textLength="70px">je suis</text>
-                  <text text-anchor="start" x="540" y="20" textLength="80px">allé au</text>
-                  <text text-anchor="start" x="625" y="20" textLength="170px">supermarché.</text>
-                </svg>
+        {% with sentence_text = 'Hier, je suis allé au supermarché.',
+                ex_id = 'fr-1',
+                segments = [
+                  (210, 160, 'Hier,'),
+                  (460, 70, 'je suis'),
+                  (540, 80, 'allé au'),
+                  (625, 170, 'supermarché.'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-                <br><br>
-              </div>
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts fr-1">
+        {% with sentence_text = 'Tournez à la page cent-vingt-deux.',
+                ex_id = 'fr-2',
+                segments = [
+                  (175, 160, 'Tournez'),
+                  (350, 150, 'à la page'),
+                  (525, 230, 'cent-vingt-deux.'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-              </div>
-            </div>
-          </div>
-        </div>
+        {% with sentence_text = "Est-ce que vous partez en vacances aujourd'hui?",
+                ex_id = 'fr-3',
+                segments = [
+                  (190, 110, 'Est-ce que'),
+                  (312, 130, 'vous partez'),
+                  (460, 145, 'en vacances'),
+                  (615, 130, "aujourd'hui?"),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
+        {% with sentence_text = 'Comment vous appelez-vous?',
+                ex_id = 'fr-4',
+                segments = [
+                  (210, 120, 'Comment'),
+                  (350, 70, 'vous'),
+                  (440, 270, 'appelez-vous?'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
-        <div class="tab-pane fade" id="ex2">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Tournez à la page cent-vingt-deux."</p>
-              <button type="button" class="btn btn-primary play fr-2"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record fr-2"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back fr-2"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze fr-2">Save & Compare</button>
-                <div class="loading fr-2" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart fr-2">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="175" y="20" textLength="160px">Tournez</text>
-                  <text text-anchor="start" x="350" y="20" textLength="150px">à la page</text>
-                  <text text-anchor="start" x="525" y="20" textLength="230px">cent-vingt-deux.</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts fr-2">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="tab-pane fade" id="ex3">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Est-ce que vous partez en vacances aujourd'hui?"</p>
-              <button type="button" class="btn btn-primary play fr-3"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record fr-3"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back fr-3"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze fr-3">Save & Compare</button>
-                <div class="loading fr-3" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart fr-3">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="190" y="20" textLength="110px">Est-ce que</text>
-                  <text text-anchor="start" x="312" y="20" textLength="130px">vous partez</text>
-                  <text text-anchor="start" x="460" y="20" textLength="145px">en vacances</text>
-                  <text text-anchor="start" x="615" y="20" textLength="130px">aujourd'hui?</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts fr-3">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="ex4">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Comment vous appelez-vous?"</p>
-              <button type="button" class="btn btn-primary play fr-4"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record fr-4"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back fr-4"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze fr-4">Save & Compare</button>
-                <div class="loading fr-4" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart fr-4">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="210" y="20" textLength="120px">Comment</text>
-                  <text text-anchor="start" x="350" y="20" textLength="70px">vous</text>
-                  <text text-anchor="start" x="440" y="20" textLength="270px">appelez-vous?</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts fr-4">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="tab-pane fade" id="ex5">
-          <br>
-          <div class="row">
-            <div class="col-xs-10">
-              <p>"Quel beau temps on a eu récemment!"</p>
-              <button type="button" class="btn btn-primary play fr-5"><span class="glyphicon glyphicon-play"></span> Play</button>
-              <br><br>
-              <p>Try to repeat with the same intonation:</p>
-              <button type="button" class="btn btn-danger record fr-5"><span class="glyphicon glyphicon-record"></span> Record</button>
-              <button type="button" class="btn btn-primary play-back fr-5"><span class="glyphicon glyphicon-play"></span> Play Back</button>
-              <button type="button" class="btn btn-default analyze fr-5">Save & Compare</button>
-                <div class="loading fr-5" style="display: inline-block"><img src="../static/img/loading-wheel.gif" height="35px" />
-                </div>
-              <br><br>
-              <div class="chart fr-5">
-                <svg></svg>
-              </div>
-              <div class="transcript">
-                <svg>
-                  <text text-anchor="start" x="210" y="20" textLength="70px">Quel</text>
-                  <text text-anchor="start" x="295" y="20" textLength="150px">beau temps</text>
-                  <text text-anchor="start" x="465" y="20" textLength="120px">on a eu</text>
-                  <text text-anchor="start" x="610" y="20" textLength="170px">récemment!</text>
-                </svg>
-                <br><br>
-              </div>
-              
-            </div>
-            <div class="col-xs-2">
-              <h4>Your Recordings</h4>
-              <div class="attempts fr-5">
-
-              </div>
-            </div>
-          </div>
-        </div>
-
+        {% with sentence_text = 'Quel beau temps on a eu récemment!',
+                ex_id = 'fr-5',
+                segments = [
+                  (210, 70, 'Quel'),
+                  (295, 150, 'beau temps'),
+                  (465, 120, 'on a eu'),
+                  (610, 170, 'récemment!'),
+                ] %}
+          {% include 'tab.html' %}
+        {% endwith %}
 
       </div>
 
@@ -254,31 +119,31 @@
 
 <script>
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex1"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#fr-1"]', function (e) {
   exID = 'fr-1';
   recLength = 3.0;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex2"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#fr-2"]', function (e) {
   exID = 'fr-2';
   recLength = 2.3;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex3"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#fr-3"]', function (e) {
   exID = 'fr-3';
   recLength = 2.5;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex4"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#fr-4"]', function (e) {
   exID = 'fr-4';
   recLength = 1.6;
   switchTabs(exID, recLength);
 });
 
-$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#ex5"]', function (e) {
+$(document).on('show.bs.tab', 'a[data-toggle="tab"][href="#fr-5"]', function (e) {
   exID = 'fr-5';
   recLength = 2.3;
   switchTabs(exID, recLength);
