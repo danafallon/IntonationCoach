@@ -1,3 +1,5 @@
+import json
+
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -24,7 +26,7 @@ class Recording(db.Model):
 			"ex_id": self.ex_id,
 			"attempt_num": self.attempt_num,
 			"audio_data": self.audio_data,
-			"pitch_data": self.pitch_data
+			"pitch_data": json.loads(self.pitch_data)
 		}
 
 		return serialized

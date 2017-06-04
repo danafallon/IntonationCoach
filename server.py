@@ -1,7 +1,7 @@
 """Server for Intonation Coach."""
 
-from flask import (Flask, render_template, session, send_from_directory,
-	request, jsonify, flash, redirect, url_for, Response)
+from flask import (Flask, render_template, send_from_directory,
+	request, jsonify, redirect, url_for)
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 import json
@@ -16,7 +16,6 @@ app = Flask(__name__)
 app.secret_key = 'development key'
 app.jinja_env.undefined = jinja2.StrictUndefined
 
-response = Response()
 
 @app.route('/')
 def index():
@@ -60,12 +59,11 @@ def send_target_pitch_data():
 
 	ex_id = request.form.get("sentence")
 	with open("./static/json/" + ex_id + "-pd.json") as target_file:
-		target_json = json.loads(target_file.read())
-		target_pitch_data = json.dumps(target_json, sort_keys=True)
+		target_pitch_data = json.loads(target_file.read())
 
 	attempts = Recording.query.filter_by(ex_id=ex_id).all() or []
 
-	return jsonify(target=target_pitch_data,
+	return jsonify(target_pitch_data=target_pitch_data,
 				   attempts=[attempt.serialize() for attempt in attempts])
 
 
@@ -98,9 +96,7 @@ def analyze_user_rec():
 	db.session.add(new_rec)
 	db.session.commit()
 
-	return jsonify(user_pitch_data=user_pitch_data,
-				   user_audio_data=json.dumps(user_b64),
-				   rec_id=new_rec.rec_id)
+	return jsonify(attempt=new_rec.serialize())
 
 
 @app.route('/delete-attempt', methods=["POST"])
