@@ -107,7 +107,9 @@ def send_target_pitch_data():
     with open("./static/json/" + ex_id + "-pd.json") as target_file:
         target_pitch_data = json.loads(target_file.read())
 
-    attempts = Recording.query.filter_by(user_id=session['user_id'], ex_id=ex_id).all() or []
+    attempts = []
+    if 'user_id' in session:
+        attempts = Recording.query.filter_by(user_id=session['user_id'], ex_id=ex_id).all()
 
     return jsonify(target_pitch_data=target_pitch_data,
                    attempts=[attempt.serialize() for attempt in attempts])
@@ -115,44 +117,49 @@ def send_target_pitch_data():
 
 @app.route('/analyze', methods=["POST"])
 def analyze_user_rec():
-    """Analyze the user's recording, save the audio data and pitch data to
-    database, and send pitch data back to page."""
+    """Analyze the user's recording, save audio data and pitch data to
+    the database if they're logged in, and send pitch data back to page."""
 
+    ex_id = request.form.get("ex_id")
     # cut off first 22 chars ("data:audio/wav;base64,")
     user_b64 = request.form.get("user_rec")[22:]
     user_wav = base64.b64decode(user_b64)
     user_recording_path = os.path.abspath('./static/sounds/user-rec.wav')
     with open(user_recording_path, 'wb') as f:
         f.write(user_wav)
-
     user_pitch_data = analyze_pitch(user_recording_path)
 
-    # store audio data (user_b64) and user_pitch_data in db
-    ex_id = request.form.get("ex_id")
-    attempts = Recording.query.filter_by(ex_id=ex_id).all()
-    if attempts:
-        attempt_num = max(attempt.attempt_num for attempt in attempts) + 1
-    else:
+    attempt = {}
+    if 'user_id' in session:
+        attempts = Recording.query.filter_by(user_id=session['user_id'], ex_id=ex_id).all()
         attempt_num = 1
+        if attempts:
+            attempt_num += max(attempt.attempt_num for attempt in attempts)
+        new_rec = Recording(user_id=session['user_id'],
+                            ex_id=ex_id,
+                            attempt_num=attempt_num,
+                            audio_data=user_b64,
+                            pitch_data=user_pitch_data,
+                            created_at=datetime.datetime.now())
+        db.session.add(new_rec)
+        db.session.commit()
+        attempt = new_rec.serialize()
+    else:
+        attempt = {
+            "ex_id": ex_id,
+            "audio_data": user_b64,
+            "pitch_data": json.loads(user_pitch_data)
+            }
 
-    new_rec = Recording(user_id=session['user_id'],
-                        ex_id=ex_id,
-                        attempt_num=attempt_num,
-                        audio_data=user_b64,
-                        pitch_data=user_pitch_data,
-                        created_at=datetime.datetime.now())
-    db.session.add(new_rec)
-    db.session.commit()
-
-    return jsonify(attempt=new_rec.serialize())
+    return jsonify(attempt=attempt)
 
 
 @app.route('/delete-attempt', methods=["POST"])
 def delete_attempt():
-    rec_id = request.form.get("rec_id")
-    rec = Recording.query.filter_by(rec_id=rec_id).one()
-    db.session.delete(rec)
-    db.session.commit()
+    rec = Recording.query.filter_by(id=request.form.get("id")).first()
+    if rec:
+        db.session.delete(rec)
+        db.session.commit()
 
     return redirect(redirect_url())
 

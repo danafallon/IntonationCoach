@@ -36,11 +36,13 @@ class Recording(db.Model):
     created_at = db.Column(db.DateTime)
 
     def __repr__(self):
-        return "<Recording %s: %s attempt %s>" % (self.rec_id, self.ex_id, self.attempt_num)
+        return "<Recording %s: user %s, %s, attempt %s>" % (self.id, self.user_id,
+                                                            self.ex_id, self.attempt_num)
 
     def serialize(self):
         return {
-            "rec_id": self.rec_id,
+            "id": self.id,
+            "user_id": self.user_id,
             "ex_id": self.ex_id,
             "attempt_num": self.attempt_num,
             "audio_data": self.audio_data,

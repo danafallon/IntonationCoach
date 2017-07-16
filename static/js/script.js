@@ -100,8 +100,20 @@ var analyzeUserPitch = function (blob, targetPitchData, exID) {
             cache: false,
             success: function(response) {
                 var attempt = response.attempt;
+                if (!attempt.attempt_num) {
+                    var attemptNum = 1;
+                    if ($('.attempts').children().length) {
+                        attemptNum += parseInt($('.attempts .attempt:last-child').attr('class').split(' ')[1]);
+                    }
+                    attempt.attempt_num = attemptNum;
+                }
                 addPlayDeleteAttemptBtns(attempt);
-                updateGraph(attempt.pitch_data, attempt.attempt_num);
+                chartData.push({
+                    values: attempt.pitch_data,
+                    key: 'Recording #' + attempt.attempt_num
+                });
+                updateGraph();
+                $('.loading').hide();
             }
         });
     };
@@ -136,19 +148,12 @@ var buildGraph = function (recLength) {
     });
 };
 
-// add user's pitch data to graph
 var updateGraph = function (userPitchData, attemptNum) {
-    chartData.push({
-        values: userPitchData,
-        key: 'Recording #' + attemptNum
-    });
-  
     d3.select('.chart.' + exID + ' svg')
         .datum(chartData)
         .transition().duration(500);
     
     chart.update();
-    $('.loading').hide();
 };
 
 var animatePlaybar = function (recLength) {
@@ -182,11 +187,21 @@ var addPlayDeleteAttemptBtns = function (attempt) {
     newDelBtn = $('<button>').attr('class', 'btn btn-danger del-attempt btn-sm')
         .html('<span class="glyphicon glyphicon-remove"></span> Delete')
         .on('click', function (evt) {
-            $.post('/delete-attempt', {rec_id: attempt.rec_id}, function () {
-                loadTab(exID, recLength);
-            });
+            if (attempt.id) {
+                $.post('/delete-attempt', {id: attempt.id}, function () {
+                    loadTab(exID, recLength);
+                });
+            } else {
+                var attemptContainer = $('.attempt.' + attempt.attempt_num);
+                var idx = attemptContainer.index();
+                attemptContainer.remove();
+                chartData.splice(idx + 1, 1);
+                updateGraph();
+            }
         });
-  $('.attempts').append('<b>#' + attempt.attempt_num + '</b> ', newPlayBtn, ' ', newDelBtn, '<br><br>');
+    var attemptDiv = $('<div>').attr('class', 'attempt ' + attempt.attempt_num)
+        .append('<b>#' + attempt.attempt_num + '</b> ', newPlayBtn, ' ', newDelBtn, '<br><br>');
+    $('.attempts').append(attemptDiv);
 };
 
 
