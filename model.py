@@ -9,18 +9,18 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(254), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime)
 
     def __repr__(self):
         return "<User %s>" % self.email
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.pwdhash, password)
+        return check_password_hash(self.password_hash, password)
 
 
 class Recording(db.Model):
@@ -51,7 +51,7 @@ class Recording(db.Model):
 def connect_to_db(app):
     """Connect the database to the Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recordings.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///intonationcoach.db'
     db.app = app
     db.init_app(app)
 

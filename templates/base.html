@@ -54,7 +54,14 @@
                 </li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="/about">About</a></li>
+                {% if session.get('user_id') %}
+                  {% if session.get('email') %}
+                    <li><a href="#">{{ session['email'] }}</a></li>
+                  {% endif %}
+                  <li><a href="/logout">Log Out</a></li>
+                {% else %}
+                  <li><a href="/login">Log In</a></li>
+                {% endif %}
               </ul>
             </div>
           </div>

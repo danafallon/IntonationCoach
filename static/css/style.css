@@ -124,6 +124,10 @@ blockquote > p {
   text-align: center;
 }
 
+.form-panel p {
+  margin-top: 10px;
+}
+
 form {
   padding: 0 20px 10px;
 }

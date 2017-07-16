@@ -7,7 +7,7 @@ from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    send_from_directory, session, url_for)
 import jinja2
 
-from forms import SignupForm
+from forms import LoginForm, SignupForm
 from model import Recording, User, connect_to_db, db
 from pitchgraph import analyze_pitch
 
@@ -33,10 +33,10 @@ def signup():
         db.session.commit()
 
         session['user_id'] = user.id
+        session['email'] = user.email
         return redirect(url_for('index'))
 
     elif form.errors:
-        print "error"
         flash("Error creating account")
 
     return render_template("signup.html", form=form)
@@ -44,14 +44,28 @@ def signup():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    form = LoginForm()
 
-    return render_template("login.html")
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            if user.check_password(form.password.data):
+                session['user_id'] = user.id
+                session['email'] = user.email
+                return redirect(url_for('index'))
+        flash('Invalid email or password')
+
+    return render_template("login.html", form=form)
 
 
-@app.route('/logout', methods=["POST"])
+@app.route('/logout')
 def logout():
+    if 'user_id' in session:
+        session.pop('user_id')
+    if 'email' in session:
+        session.pop('email')
 
-    return redirect()
+    return redirect(url_for('login'))
 
 
 @app.route('/about')
