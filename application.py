@@ -12,17 +12,17 @@ from model import Recording, User, connect_to_db, db
 from pitchgraph import analyze_pitch
 
 
-app = Flask(__name__)
-app.secret_key = 'development key'
-app.jinja_env.undefined = jinja2.StrictUndefined
+application = Flask(__name__)
+application.secret_key = 'development key'
+application.jinja_env.undefined = jinja2.StrictUndefined
 
 
-@app.route('/')
+@application.route('/')
 def index():
     return render_template("home.html")
 
 
-@app.route('/signup', methods=["GET", "POST"])
+@application.route('/signup', methods=["GET", "POST"])
 def signup():
     form = SignupForm()
 
@@ -42,7 +42,7 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route('/login', methods=["GET", "POST"])
+@application.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
 
@@ -58,7 +58,7 @@ def login():
     return render_template("login.html", form=form)
 
 
-@app.route('/logout')
+@application.route('/logout')
 def logout():
     if 'user_id' in session:
         session.pop('user_id')
@@ -68,37 +68,37 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/about')
+@application.route('/about')
 def about():
     return render_template("about.html")
 
 
-@app.route('/guidelines')
+@application.route('/guidelines')
 def guidelines():
     return render_template("guidelines.html")
 
 
-@app.route('/french')
+@application.route('/french')
 def french_content():
     return render_template("french.html")
 
 
-@app.route('/english-us')
+@application.route('/english-us')
 def english_content():
     return render_template('english-us.html')
 
 
-@app.route('/russian')
+@application.route('/russian')
 def russian_content():
     return render_template('russian.html')
 
 
-@app.route('/<path:path>')
+@application.route('/<path:path>')
 def send_audio_file(path):
     return send_from_directory('static', path)
 
 
-@app.route('/targetdata', methods=["POST"])
+@application.route('/targetdata', methods=["POST"])
 def send_target_pitch_data():
     """Send pitch data from target recording to be displayed in graph when tab loads.
     Also send the user's past attempts at this sentence, if any."""
@@ -115,7 +115,7 @@ def send_target_pitch_data():
                    attempts=[attempt.serialize() for attempt in attempts])
 
 
-@app.route('/analyze', methods=["POST"])
+@application.route('/analyze', methods=["POST"])
 def analyze_user_rec():
     """Analyze the user's recording, save audio data and pitch data to
     the database if they're logged in, and send pitch data back to page."""
@@ -154,7 +154,7 @@ def analyze_user_rec():
     return jsonify(attempt=attempt)
 
 
-@app.route('/delete-attempt', methods=["POST"])
+@application.route('/delete-attempt', methods=["POST"])
 def delete_attempt():
     rec = Recording.query.filter_by(id=request.form.get("id")).first()
     if rec:
@@ -169,6 +169,6 @@ def redirect_url(default='index'):
 
 
 if __name__ == "__main__":
-    app.debug = True
-    connect_to_db(app)
-    app.run()
+    application.debug = True
+    connect_to_db(application)
+    application.run()
