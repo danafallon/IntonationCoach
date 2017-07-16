@@ -1,11 +1,14 @@
 import json
 import base64
+import datetime
 import os
 
-from flask import Flask, render_template, send_from_directory, request, jsonify, redirect, url_for
+from flask import (Flask, flash, jsonify, redirect, render_template, request,
+                   send_from_directory, session, url_for)
 import jinja2
 
-from model import Recording, connect_to_db, db
+from forms import SignupForm
+from model import Recording, User, connect_to_db, db
 from pitchgraph import analyze_pitch
 
 
@@ -17,6 +20,38 @@ app.jinja_env.undefined = jinja2.StrictUndefined
 @app.route('/')
 def index():
     return render_template("home.html")
+
+
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        user = User(email=form.email.data, created_at=datetime.datetime.now())
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+
+        session['user_id'] = user.id
+        return redirect(url_for('index'))
+
+    elif form.errors:
+        print "error"
+        flash("Error creating account")
+
+    return render_template("signup.html", form=form)
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+
+    return render_template("login.html")
+
+
+@app.route('/logout', methods=["POST"])
+def logout():
+
+    return redirect()
 
 
 @app.route('/about')
@@ -58,7 +93,7 @@ def send_target_pitch_data():
     with open("./static/json/" + ex_id + "-pd.json") as target_file:
         target_pitch_data = json.loads(target_file.read())
 
-    attempts = Recording.query.filter_by(ex_id=ex_id).all() or []
+    attempts = Recording.query.filter_by(user_id=session['user_id'], ex_id=ex_id).all() or []
 
     return jsonify(target_pitch_data=target_pitch_data,
                    attempts=[attempt.serialize() for attempt in attempts])
@@ -86,10 +121,12 @@ def analyze_user_rec():
     else:
         attempt_num = 1
 
-    new_rec = Recording(ex_id=ex_id,
+    new_rec = Recording(user_id=session['user_id'],
+                        ex_id=ex_id,
                         attempt_num=attempt_num,
                         audio_data=user_b64,
-                        pitch_data=user_pitch_data)
+                        pitch_data=user_pitch_data,
+                        created_at=datetime.datetime.now())
     db.session.add(new_rec)
     db.session.commit()
 

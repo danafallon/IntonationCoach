@@ -13,7 +13,6 @@
     <!-- Bootstrap -->
     <link href="../static/css/lib/bootstrap.css" rel="stylesheet">
     <script src="../static/js/lib/bootstrap.min.js"></script>
-    <!-- <link href="https://bootswatch.com/darkly/bootstrap.css" rel="stylesheet"> -->
 
     <!-- D3 & NVD3 -->
     <script src="../static/js/lib/d3.js"></script>
@@ -62,6 +61,15 @@
       </div>
 
       <!-- Main content -->
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
       {% block body %} {% endblock %}
     
     </div>

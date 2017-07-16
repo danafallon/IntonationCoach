@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from "form-helpers.html" import render_field %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default form-panel">
+            <div class="panel-body">
+                <h2>Sign Up</h2>
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div class="form-body">
+                        {{ render_field(form.email) }}
+                        {{ render_field(form.password) }}
+                        {{ render_field(form.confirm) }}
+                    </div>
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

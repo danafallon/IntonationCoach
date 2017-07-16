@@ -66,6 +66,7 @@ h1.landing {
 }
 
 .panel {
+  margin-top: 16px;
   background-color: rgba(255,255,255,0.8);
 }
 
@@ -104,11 +105,68 @@ blockquote > p {
   background-color: rgba(255,255,255,0.75);
 }
 
-
 .jumbotron .dropdown-menu { 
   margin: 0 auto; 
   top: inherit;
   float: none;
+}
+
+/* forms */
+
+.form-panel {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-panel h2 {
+  margin: 10px 0 20px;
+  text-align: center;
+}
+
+form {
+  padding: 0 20px 10px;
+}
+
+.form-body {
+  padding-bottom: 15px;
+}
+
+form .form-field {
+  margin-bottom: 15px;
+}
+
+form input {
+  width: 330px;
+}
+
+form ul.errors {
+  list-style: none;
+  color: #b90808;
+  margin-left: -30px;
+}
+
+form ul.errors li {
+  font-size: 12px;
+}
+
+form .btn-primary {
+  width: 100%;
+}
+
+
+ul.flashes {
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  list-style: none;
+}
+
+.flashes li {
+  border: 1px solid #b90808;
+  border-radius: 4px;
+  background: #f3d1d7;
+  padding: 8px 14px;
 }
 
 
@@ -120,13 +178,9 @@ html, body {
 .wrapper {
     min-height: 100%;
     height: auto !important;
-    margin: 0 auto -60px; /* the bottom margin is the negative value of the footer's height */
+    margin: 0 auto -40px; /* the bottom margin is the negative value of the footer's height */
     padding: 0 0 60px;
 }
 .footer {
-    height: 60px;
+    height: 40px;
 }
-
-
-
-

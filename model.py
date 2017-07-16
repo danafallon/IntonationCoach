@@ -1,21 +1,39 @@
 import json
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug import generate_password_hash, check_password_hash
 
 
 db = SQLAlchemy()
 
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return "<User %s>" % self.email
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pwdhash, password)
+
+
 class Recording(db.Model):
     """User recording, containing both the audio data and the json pitch data."""
 
-    __tablename__ = "Recordings"
-
-    rec_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('recordings', lazy=True))
     ex_id = db.Column(db.String(15), nullable=False)
     attempt_num = db.Column(db.Integer, nullable=False)
     audio_data = db.Column(db.String(4000000))
     pitch_data = db.Column(db.String(1000000))
+    created_at = db.Column(db.DateTime)
 
     def __repr__(self):
         return "<Recording %s: %s attempt %s>" % (self.rec_id, self.ex_id, self.attempt_num)

@@ -1,4 +1,4 @@
-env
+venv
 *.pyc
 Praat.app
 user-rec.wav
