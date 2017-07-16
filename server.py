@@ -27,7 +27,7 @@ def signup():
     form = SignupForm()
 
     if form.validate_on_submit():
-        user = User(email=form.email.data, created_at=datetime.datetime.now())
+        user = User(email=form.email.data.lower(), created_at=datetime.datetime.now())
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
