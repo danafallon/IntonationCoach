@@ -2,6 +2,7 @@ import json
 import base64
 import datetime
 import os
+import uuid
 
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    send_from_directory, session, url_for)
@@ -122,10 +123,11 @@ def analyze_user_rec():
     # cut off first 22 chars ("data:audio/wav;base64,")
     user_b64 = request.form.get("user_rec")[22:]
     user_wav = base64.b64decode(user_b64)
-    user_recording_path = os.path.abspath('./static/sounds/user-rec.wav')
+    user_recording_path = os.path.abspath('./static/sounds/user-rec-' + str(uuid.uuid4()) +  '.wav')
     with open(user_recording_path, 'wb') as f:
         f.write(user_wav)
     user_pitch_data = analyze_pitch(user_recording_path)
+    os.remove(user_recording_path)
 
     attempt = {}
     if 'user_id' in session:

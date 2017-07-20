@@ -1,8 +1,7 @@
-venv
 *.pyc
 Praat.app
-user-rec.wav
 .DS_Store
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
