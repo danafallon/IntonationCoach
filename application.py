@@ -5,7 +5,6 @@ import os
 
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
                    send_from_directory, session, url_for)
-import jinja2
 
 from forms import LoginForm, SignupForm
 from model import Recording, User, connect_to_db, db
@@ -13,8 +12,7 @@ from pitchgraph import analyze_pitch
 
 
 application = Flask(__name__)
-application.secret_key = 'development key'
-application.jinja_env.undefined = jinja2.StrictUndefined
+application.config.from_object(os.environ.get('APP_SETTINGS') or 'config.DevelopmentConfig')
 
 
 @application.route('/')
@@ -169,6 +167,5 @@ def redirect_url(default='index'):
 
 
 if __name__ == "__main__":
-    application.debug = True
     connect_to_db(application)
     application.run()
