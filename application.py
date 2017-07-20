@@ -14,6 +14,7 @@ from pitchgraph import analyze_pitch
 
 application = Flask(__name__)
 application.config.from_object(os.environ.get('APP_SETTINGS') or 'config.DevelopmentConfig')
+connect_to_db(application)
 
 
 @application.route('/')
@@ -169,5 +170,4 @@ def redirect_url(default='index'):
 
 
 if __name__ == "__main__":
-    connect_to_db(application)
     application.run()
